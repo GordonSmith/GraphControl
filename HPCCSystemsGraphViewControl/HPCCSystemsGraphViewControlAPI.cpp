@@ -89,7 +89,6 @@ HPCCSystemsGraphViewControlAPI::HPCCSystemsGraphViewControlAPI(const HPCCSystems
 
 	//  Events
 	registerEvent(Scaled);
-	registerEvent(LayoutFinished);
 	registerEvent(MouseDoubleClick);
 	registerEvent(SelectionChanged);
 }

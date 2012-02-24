@@ -97,6 +97,7 @@ public:
 
 	//  Fire Events
 	void fireScaled(int newScale);
+	FB_JSAPI_EVENT(LayoutFinished, 0, ());
 	void fireLayoutFinished();
 	void fireMouseDoubleClicked(int item);
 	void fireSelChanged(const std::vector<int> & seection);

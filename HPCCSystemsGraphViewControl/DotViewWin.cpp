@@ -207,7 +207,7 @@ LRESULT CDotView::OnLayoutComplete(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam)
 		CalcScrollbars();
 		CenterOnGraphItem(NULL);
 		Invalidate();
-		m_api->fireLayoutFinished();
+		m_api->fire_LayoutFinished();
 	}
 	delete dot;
 	delete svg;
