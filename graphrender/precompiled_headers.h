@@ -55,6 +55,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/smart_ptr/detail/atomic_count.hpp>
+#include <boost/gil/gil_all.hpp>
 
 #if defined(_DEBUGXXX)
 # include <stdlib.h>

@@ -37,7 +37,6 @@ class CGraphRender : public IGraphRender, public CUnknown
 {
 protected:
 	IGraphPtr m_g;
-	IGraphBufferPtr m_pixmap;
 	mutable Agg2D m_agg2d;
 
 	std::string m_message;
@@ -135,7 +134,7 @@ public:
 	BEGIN_CUNKNOWN
 	END_CUNKNOWN
 
-	CGraphRender(IGraph * g, IGraphBuffer * pixmap, IGraphHotItem * hotItem, IGraphSelectionBag * selectionBag, double scale = 1.0) : m_g(g), m_pixmap(pixmap), m_hotItem(hotItem), m_selected(selectionBag), 
+	CGraphRender(IGraph * g, IGraphHotItem * hotItem, IGraphSelectionBag * selectionBag, double scale = 1.0) : m_g(g), m_hotItem(hotItem), m_selected(selectionBag), 
 			m_hotStroke(Colour::RoyalBlue),				m_hotFill(Colour::White),				m_hotFillText(Colour::Black),
 			m_selectedStroke(Colour::DarkBlue),			m_selectedFill(Colour::AliceBlue),			m_selectedFillText(Colour::DarkBlue)
 	{
@@ -794,16 +793,16 @@ public:
 		m_inType = RENDER_TYPE_UNKNOWN;
 	}
 
-	void DoRender(const RectI & _rect, bool clear)
+	void RenderTo(IGraphBuffer * target, const RectI & _rect, bool clear) 
 	{
 		RectD rect(_rect);
 		rect = ScreenToWorld(rect);
 		//if (m_renderRect != rect)
 		{
 			m_renderRect = rect;
-			assert(_rect.Width() <= m_pixmap->Width() && _rect.Height() <= m_pixmap->Height());
+			assert(_rect.Width() <= target->Width() && _rect.Height() <= target->Height());
 
-			m_agg2d.attach(m_pixmap->GetBuffer(), m_pixmap->Width(), m_pixmap->Height(), m_pixmap->Stride());
+			m_agg2d.attach(target->GetBuffer(), target->Width(), target->Height(), target->Stride());
 			if (m_scale > OVERVIEW_CUTOFF)
 				m_agg2d.antiAliasGamma(1.4);
 			else
@@ -816,7 +815,7 @@ public:
 				m_agg2d.translate(m_offset.x, m_offset.y);
 				m_agg2d.scale(m_scale, m_scale);
 			}
-			m_agg2d.viewport(_rect.left, _rect.top, _rect.right, _rect.bottom, 0, 0, m_pixmap->Width(), m_pixmap->Height(), Agg2D::XMidYMid);
+			m_agg2d.viewport(_rect.left, _rect.top, _rect.right, _rect.bottom, 0, 0, target->Width(), target->Height(), Agg2D::XMidYMid);
 
 			if (clear)
 				m_agg2d.clearAll(0x7f, 0x7f, 0x7f);
@@ -877,18 +876,10 @@ public:
 			//}
 		}
 	}
-
-	void DoRenderRect(const RectD & rect)
-	{
-		Colour black(Colour::DarkBlue), white(Colour::WhiteSmoke);
-		m_agg2d.fillColor(black.GetR(), black.GetG(), black.GetB(), black.GetA() / 4);
-		m_agg2d.lineColor(black.GetR(), black.GetG(), black.GetB(), 255);//m_hotStroke.GetA());
-		m_agg2d.rectangle(rect.GetLeft(), rect.GetTop(), rect.GetRight(), rect.GetBottom());
-	}
 };
 
-GRAPHRENDER_API IGraphRender * CreateGraphRender(IGraph * g, IGraphBuffer * pixmap, IGraphHotItem * hotItem, IGraphSelectionBag * selectionBag, double scale)
+GRAPHRENDER_API IGraphRender * CreateGraphRender(IGraph * g, IGraphHotItem * hotItem, IGraphSelectionBag * selectionBag, double scale)
 {
-	return new CGraphRender(g, pixmap, hotItem, selectionBag, scale);
+	return new CGraphRender(g, hotItem, selectionBag, scale);
 }
 }

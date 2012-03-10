@@ -51,11 +51,10 @@ hpcc_interface GRAPHRENDER_API IGraphRender : public IUnknown
 	virtual RectD WorldToScreen(const RectD & pt) const = 0;
 
 	//  Rendering  ---
-	virtual void DoRender(const RectI & rect, bool clear) = 0;
-	virtual void DoRenderRect(const RectD & rect) = 0;
+	virtual void RenderTo(IGraphBuffer * target, const RectI & rect, bool clear) = 0;
 };
 typedef CUnknownPtr<IGraphRender> IGraphRenderPtr;
 
-GRAPHRENDER_API IGraphRender * CreateGraphRender(IGraph * g, IGraphBuffer * pixmap, IGraphHotItem * hotItem, IGraphSelectionBag * selectionBag, double scale = 1.0);
+GRAPHRENDER_API IGraphRender * CreateGraphRender(IGraph * g, IGraphHotItem * hotItem, IGraphSelectionBag * selectionBag, double scale = 1.0);
 };
 

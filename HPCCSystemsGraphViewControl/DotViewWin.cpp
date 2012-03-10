@@ -85,7 +85,7 @@ void CDotView::DoPaint(CDCHandle dc)
 	hpcc::RectI drcd(drc.left, drc.top, drc.right, drc.bottom);
 
 	m_buffer->Resize(drc.Width(), drc.Height());
-	m_gr->DoRender(drcd, true);
+	m_gr->RenderTo(m_buffer, drcd, true);
 
 	hpcc::RectD winRect(drc.left, drc.top, drc.Width(), drc.Height());
 	winRect = m_gr->ScreenToWorld(winRect);

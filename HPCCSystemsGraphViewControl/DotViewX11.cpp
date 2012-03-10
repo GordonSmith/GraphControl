@@ -96,7 +96,7 @@ void CDotView::DoPaint(GdkEvent *evt)
 	hpcc::RectI rect(event->area.x, event->area.y, event->area.x + event->area.width, event->area.y + event->area.height);
 	rect.Offset(m_ptOffset.x, m_ptOffset.y);
 //	std::cout << "GDK_EXPOSE:  Start 3" << "\n";
-	m_gr->DoRender(rect, true);
+	m_gr->RenderTo(m_buffer, rect, true);
 //	std::cout << "GDK_EXPOSE:  Start 4" << "\n";
 //
 //	std::cout << "x2:  " << event->area.x << "\t";
