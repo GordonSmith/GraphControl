@@ -175,3 +175,9 @@ elseif(UNIX)
 endif()
 
 # *********************************************************************
+
+INSTALL(TARGETS HPCCSystemsGraphViewControl 
+	RUNTIME DESTINATION ${INSTALL_RUNTIME_FOLDER} COMPONENT PLUGIN
+	LIBRARY DESTINATION ${INSTALL_LIBRARY_FOLDER}
+	ARCHIVE DESTINATION ${INSTALL_ARCHIVE_FOLDER}
+)
