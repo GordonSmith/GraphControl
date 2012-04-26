@@ -596,6 +596,18 @@ public:
 		}
 	}
 
+	void RenderPoints(Agg2D & agg2d, const AttrDPartVector & path) const
+	{
+		agg2d.resetPath();
+		for (AttrDPartVector::const_iterator itr = path.begin(); itr != path.end(); ++itr)
+		{
+			for (int i = 0; i < itr->m_points.size(); i += 2) 
+			{
+				agg2d.ellipse(itr->m_points[i], itr->m_points[i + 1], 4, 4);
+			}
+		}
+	}
+
 	void Render(Agg2D & agg2d, Path * path) const
 	{
 		if (!path)
@@ -696,6 +708,10 @@ public:
 			agg2d.drawPath(SetLineAndFill(agg2d, itr->get()->m_stroke, itr->get()->m_fill));
 			agg2d.lineWidth(1.0);
 			agg2d.dashClear();
+#define NSHOW_POINTS
+#ifdef SHOW_POINTS
+			RenderPoints(agg2d, itr->get()->m_d);
+#endif
 		}
 		if (m_scale > OVERVIEW_CUTOFF)
 		{
