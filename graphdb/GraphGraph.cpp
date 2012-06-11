@@ -86,12 +86,12 @@ void CGraph::DeleteCluster(ICluster * cluster)
 		//  Delete Cluster  ---
 		parent->RemoveCluster(cluster);
 		{
-			IClusterSet::const_iterator found = m_allClusters.find(cluster);
+			IClusterSet::iterator found = m_allClusters.find(cluster);
 			if (found != m_allClusters.end())
 				m_allClusters.erase(found);
 		}
 		{
-			IDGraphItemMap::const_iterator found = m_allItems.find(cluster->GetID());
+			IDGraphItemMap::iterator found = m_allItems.find(cluster->GetID());
 			if (found != m_allItems.end())
 				m_allItems.erase(found);
 		}
