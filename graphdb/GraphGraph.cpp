@@ -33,6 +33,8 @@ CGraph::CGraph() : CCluster()  //- 'this' should not be used in base member init
 {
 	m_graph = this;
 	m_parent = NULL;
+	SetProperty("id", "0");
+	SetExternalID(hpcc::GRAPH_TYPE_GRAPH, "0", (IGraph *)this);
 }
 
 void CGraph::Clear()
@@ -45,7 +47,7 @@ void CGraph::Clear()
 	m_externalIDs.clear();
 	m_rexternalIDs.clear();
 	SetProperty("id", "0");
-	SetExternalID(hpcc::GRAPH_TYPE_CLUSTER, "0", (ICluster *)(CCluster *)this);
+	SetExternalID(hpcc::GRAPH_TYPE_GRAPH, "0", (IGraph *)this);
 }
 
 ICluster * CGraph::CreateCluster()
@@ -123,6 +125,13 @@ IEdge * CGraph::CreateEdge(IVertex * from, IVertex * to)
 	return e;
 }
 
+IGraph * CGraph::GetGraph(const std::string & id, bool externalID) const
+{
+	if (externalID)
+		return GetItem<IGraph>(GRAPH_TYPE_GRAPH, id);
+	return GetItem<IGraph>(id);
+}
+
 const IClusterSet & CGraph::GetAllClusters() const
 {
 	return m_allClusters;
@@ -184,7 +193,7 @@ void CGraph::Walk(IEdgeVisitor * visitor) const
 
 IGraphItem * CGraph::GetGraphItem(unsigned int id) const
 {
-	if (m_id == id)
+	if (m_id == id || id == 0)
 		return (IGraph *)const_cast<CGraph *>(this);
 
 	IDGraphItemMap::const_iterator found = m_allItems.find(id);

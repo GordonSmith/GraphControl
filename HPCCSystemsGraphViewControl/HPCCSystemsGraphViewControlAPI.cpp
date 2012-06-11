@@ -356,8 +356,7 @@ const std::string HPCCSystemsGraphViewControlAPI::getDOT()
 const std::string HPCCSystemsGraphViewControlAPI::getLocalisedXGMML(const std::vector<int> & items)
 {
 	std::string retVal;
-	for(std::vector<int>::const_iterator itr = items.begin(); itr != items.end(); ++itr)
-		m_callback->GetLocalisedXGMML(*itr, retVal);
+	m_callback->GetLocalisedXGMML(items, retVal);
 	if (retVal.empty())
 		return retVal;
 

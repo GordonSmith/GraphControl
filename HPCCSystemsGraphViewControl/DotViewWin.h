@@ -74,6 +74,7 @@ public:
 		MSG_WM_MOUSEMOVE(OnMouseMove)
 		MSG_WM_LBUTTONDBLCLK(OnLButtonDblClk)
 		MSG_WM_MOUSEWHEEL(OnMouseWheel)
+		MSG_WM_MOUSELEAVE(OnMouseLeave)
 
 		REFLECTED_NOTIFY_ID_HANDLER_EX(WM_MOUSEWHEEL, OnReflectedNotifyIDHandlerEX)
 
@@ -90,6 +91,7 @@ public:
 	void OnLButtonDblClk(UINT nFlags, CPoint point);
 	bool DoMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	void OnMouseLeave();
 
 	LRESULT OnReflectedNotifyIDHandlerEX(LPNMHDR pnmh)
 	{
