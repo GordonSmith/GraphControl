@@ -243,6 +243,7 @@ void CDotView::InvalidateWorldRect(const hpcc::RectD & worldRect)
 
 void CDotView::OnMouseMove(UINT nFlags, CPoint point)
 {
+	SetFocus();
 	switch (m_mouseDown)
 	{
 	case MOUSEDOWN_NORMAL:
@@ -265,6 +266,13 @@ void CDotView::OnMouseMove(UINT nFlags, CPoint point)
 			hpcc::IGraphItem * hotItem = NULL;//m_gro->GetItemAt(point.x, point.y);
 			if (!hotItem)
 				hotItem = m_gr->GetItemAt(point.x, point.y);
+
+			TRACKMOUSEEVENT tme = { 0 };
+			tme.cbSize = sizeof(tme);
+			tme.dwFlags = TME_LEAVE;
+			tme.hwndTrack = m_hWnd;
+			_TrackMouseEvent(&tme);
+
 			if (m_hotItem->Set(hotItem))
 			{
 				hpcc::RectD invalidateRect;
@@ -275,6 +283,18 @@ void CDotView::OnMouseMove(UINT nFlags, CPoint point)
 			}
 		}
 		break;
+	}
+}
+
+void CDotView::OnMouseLeave()
+{
+	if (m_hotItem->Set(NULL))
+	{
+		hpcc::RectD invalidateRect;
+		if (m_hotItem->GetInvalidateRect(invalidateRect))
+			InvalidateWorldRect(invalidateRect);
+		if (m_hotItem->GetPrevInvalidateRect(invalidateRect))
+			InvalidateWorldRect(invalidateRect);
 	}
 }
 

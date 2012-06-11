@@ -138,8 +138,8 @@ public:
 	END_CUNKNOWN
 
 	CGraphRender(IGraph * g, IGraphBuffer * pixmap, IGraphHotItem * hotItem, IGraphSelectionBag * selectionBag, double scale = 1.0) : m_g(g), m_pixmap(pixmap), m_hotItem(hotItem), m_selected(selectionBag), 
-			m_hotStroke(Colour::RoyalBlue),				m_hotFill(Colour::White),				m_hotFillText(Colour::RoyalBlue),
-			m_selectedStroke(Colour::DarkBlue),			m_selectedFill(Colour::AliceBlue),			m_selectedFillText(Colour::DarkBlue)
+			m_hotStroke(Colour::RoyalBlue),				m_hotFill(Colour::AliceBlue),				m_hotFillText(Colour::RoyalBlue),
+			m_selectedStroke(Colour::DarkBlue),			m_selectedFill(Colour::LightBlue),		m_selectedFillText(Colour::DarkBlue)
 	{
 		m_fonts = CreateIFontResolver();
 		m_scale = scale;
