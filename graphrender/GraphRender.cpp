@@ -48,7 +48,7 @@ protected:
 
 	RectD m_renderRect;
 
-	int m_transparency;
+	double m_transparency;
 	IGraphHotItemPtr m_hotItem;
 	IGraphSelectionBagPtr m_selected;
 
@@ -690,7 +690,7 @@ public:
 		if (depth == 0)
 			m_transparency = 1;
 		else
-			m_transparency = 2;//m_scale > OVERVIEW_CUTOFF ? 1 : 2;
+			m_transparency = 3.0f / 2.0f;//m_scale > OVERVIEW_CUTOFF ? 1 : 2;
 
 		Render(m_agg2d, GetElementG(cluster));
 #ifdef SHOW_BOUNDBOX
@@ -708,6 +708,12 @@ public:
 				if (m_inSelectedItem)
 					selectedClusters.insert(itr->get());
 				m_inState = (XGMML_STATE_ENUM)itr->get()->GetPropertyInt(XGMML_STATE);
+				if (m_inHotItem && m_inSelectedItem)
+				{
+					m_inHotItem = false;
+					RenderCluster(itr->get(), selectedClusters, hotVertices, depth + 1);
+					m_inHotItem = true;
+				}
 				RenderCluster(itr->get(), selectedClusters, hotVertices, depth + 1);
 				m_inState = XGMML_STATE_UNKNOWN;
 			}
@@ -726,6 +732,12 @@ public:
 				m_inHotItem = m_hotItem->IsHot(itr->get());
 				m_inSelectedItem = m_selected->IsSelected(itr->get());
 				m_inState = (XGMML_STATE_ENUM)itr->get()->GetPropertyInt(XGMML_STATE);
+				if (m_inHotItem && m_inSelectedItem)
+				{
+					m_inHotItem = false;
+					Render(m_agg2d, GetElementG(itr->get()));
+					m_inHotItem = true;
+				}
 				Render(m_agg2d, GetElementG(itr->get()));
 				m_inState = XGMML_STATE_UNKNOWN;
 
@@ -818,19 +830,22 @@ public:
 				IVertexSet hotVertices;
 				RenderCluster(m_g, selectedClusters, hotVertices);
 
+				//  Bring selected clusters to the top  ---
+				/*
 				m_inHotItem = false;
 				m_inSelectedItem = true;
 				for (IClusterSet::const_iterator itr = selectedClusters.begin(); itr != selectedClusters.end(); ++itr)	
 				{
 					IClusterSet selectedClustersUnused;
 					IVertexSet hotVerticesUnused;
-					RenderCluster(itr->get(), selectedClustersUnused, hotVerticesUnused, 1);
+					RenderCluster(itr->get(), selectedClustersUnused, hotVerticesUnused, 0);
 				}
-
+				*/
 				m_inHotItem = m_hotItem->IsHot(m_g);
 				m_inSelectedItem = m_selected->IsSelected(m_g);
 				RenderEdges(m_g);
 
+				/*
 				m_inHotItem = true;
 				m_inSelectedItem = false;
 				for (IVertexSet::const_iterator itr = hotVertices.begin(); itr != hotVertices.end(); ++itr)	
@@ -838,6 +853,7 @@ public:
 					m_inSelectedItem = m_selected->IsSelected(itr->get());
 					Render(m_agg2d, GetElementG(itr->get()));
 				}
+				*/
 			}
 
 			//m_agg2d.noFill();
