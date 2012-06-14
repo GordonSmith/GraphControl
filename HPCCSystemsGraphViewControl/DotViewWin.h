@@ -68,6 +68,7 @@ public:
 
 	BEGIN_MSG_MAP(CDotView)
 		MSG_WM_ERASEBKGND(OnEraseBkgnd)
+		MSG_WM_SIZE(OnSize)
 
 		MSG_WM_LBUTTONDOWN(OnLButtonDown)
 		MSG_WM_LBUTTONUP(OnLButtonUp)
@@ -84,6 +85,7 @@ public:
 	END_MSG_MAP()
 
 	BOOL OnEraseBkgnd(CDCHandle dc);
+	void OnSize(UINT nType, CSize size);
 
 	void OnLButtonDown(UINT nFlags, CPoint point);
 	void OnLButtonUp(UINT nFlags, CPoint point);

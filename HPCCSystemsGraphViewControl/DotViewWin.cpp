@@ -99,6 +99,17 @@ BOOL CDotView::OnEraseBkgnd(CDCHandle dc)
 	return true;
 }
 
+void CDotView::OnSize(UINT nType, CSize size)
+{
+	ATLTRACE("size.cx:  %i\t", size.cx);
+	ATLTRACE("size.cy:  %i\n", size.cy);
+	//  Filter out silly sizes from web browser (dojo?)  ---
+	if (size.cx > 10000 || size.cy > 10000)
+		SetMsgHandled(true);
+	else
+		SetMsgHandled(false);
+}
+
 void CDotView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	m_mouseDown = MOUSEDOWN_NORMAL;
