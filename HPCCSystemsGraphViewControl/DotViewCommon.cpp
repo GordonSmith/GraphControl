@@ -291,14 +291,14 @@ void CDotViewCommon::LoadDOT(const std::string & dot)
 	hpcc::LoadDOT(m_g, dot);
 }
 
-const char * CDotViewCommon::GetLocalisedXGMML(const std::vector<int> & items, std::string & xgmml)
+const char * CDotViewCommon::GetLocalisedXGMML(const std::vector<int> & items, int localisationDepth, int localisationDistance, std::string & xgmml)
 {
 	hpcc::IGraphItemSet graphItems;
 	for(std::vector<int>::const_iterator itr = items.begin(); itr != items.end(); ++itr)
 	{
 		graphItems.insert(m_g->GetGraphItem(*itr));
 	}
-	hpcc::WriteLocalisedXGMML(m_g, graphItems, xgmml);
+	hpcc::WriteLocalisedXGMML(m_g, graphItems, localisationDepth, localisationDistance, xgmml);
 	return xgmml.c_str();
 }
 

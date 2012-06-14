@@ -353,10 +353,10 @@ const std::string HPCCSystemsGraphViewControlAPI::getDOT()
 	return dot;
 }
 
-const std::string HPCCSystemsGraphViewControlAPI::getLocalisedXGMML(const std::vector<int> & items)
+const std::string HPCCSystemsGraphViewControlAPI::getLocalisedXGMML(const std::vector<int> & items, boost::optional<int> localisationDepth, boost::optional<int> localisationDistance)
 {
 	std::string retVal;
-	m_callback->GetLocalisedXGMML(items, retVal);
+	m_callback->GetLocalisedXGMML(items, localisationDepth ? *localisationDepth : 1, localisationDistance ? *localisationDistance : 3, retVal);
 	if (retVal.empty())
 		return retVal;
 

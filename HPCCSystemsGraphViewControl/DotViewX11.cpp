@@ -132,7 +132,7 @@ void CDotView::OnLButtonUp(hpcc::PointD point, guint modifierState)
 	bool selChanged = false;
 	if (selectedItem)
 	{
-		if (modifierState && FB::MouseButtonEvent::ModifierState_Control)
+		if (modifierState & FB::MouseButtonEvent::ModifierState_Control)
 		{
 			if (m_selection->IsSelected(selectedItem))
 				selChanged = m_selection->Deselect(selectedItem);
