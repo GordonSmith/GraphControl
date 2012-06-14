@@ -194,5 +194,5 @@ hpcc_interface GRAPHDB_API IGraph : public ICluster
 //  ===  Factories  ===
 GRAPHDB_API IGraph * CreateGraph();
 GRAPHDB_API const char * WriteDOT(const IGraph * graph, std::string & dot);
-GRAPHDB_API const char * WriteLocalisedXGMML(const IGraph * graph, const IGraphItemSet & items, std::string & xgmml);
+GRAPHDB_API const char * WriteLocalisedXGMML(const IGraph * graph, const IGraphItemSet & items, int localisationDepth, int localisationDistance, std::string & xgmml);
 }
