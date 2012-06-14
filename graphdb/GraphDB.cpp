@@ -393,6 +393,7 @@ public:
 
 	void CalcClusterVisibility(const ICluster * cluster)
 	{
+		m_visibleClusters.insert(cluster->GetClusters().begin(), cluster->GetClusters().end());
 		m_visibleVertices.insert(cluster->GetVertices().begin(), cluster->GetVertices().end());
 
 		//  Calculate edges that pass through the cluster  ---
@@ -453,8 +454,19 @@ public:
 		if (m_visibleClusters.find(cluster) != m_visibleClusters.end())
 		{
 			m_xgmml += (boost::format("<node id=\"%1%\"><att><graph>") % cluster->GetProperty("id")).str();
+			int xgmmlLen = m_xgmml.length();
 			cluster->Walk((IClusterVisitor *) this);
 			cluster->Walk((IVertexVisitor *) this);
+			if (xgmmlLen == m_xgmml.length()) 
+			{	//  Add at least one child otherwise clusters will render as a vertex  ---
+				IVertexSet::const_iterator vertex = cluster->GetVertices().begin();
+				if (vertex != cluster->GetVertices().end()) 
+				{
+					std::string vertexString;
+					BuildVertexString(vertex->get(), vertexString, true);
+					m_xgmml += vertexString;
+				}
+			}
 			m_xgmml += "</graph></att></node>";
 		}
 		return false;
