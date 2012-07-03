@@ -35,30 +35,25 @@ CDotView::CDotView(const FB::WindowContextX11 & ctx) : FB::PluginWindowX11(ctx),
 
 void CDotView::Invalidate()
 {
-	gdk_window_invalidate_rect(m_canvas->window, NULL, true);
+	InvalidateWindow();
 }
 
 void CDotView::UpdateWindow()
 {
-	//base::UpdateWindow();
 }
 
 int CDotView::GetScrollOffsetX()
 {
-	//return gtk_adjustment_get_value(gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(m_scrolled_window)));
 	return m_ptOffset.x;
 }
 
 int CDotView::GetScrollOffsetY()
 {
-	//return gtk_adjustment_get_value(gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(m_scrolled_window)));
 	return m_ptOffset.y;
 }
 
 void CDotView::SetScrollOffset(int x, int y)
 {
-	//gtk_adjustment_set_value(gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(m_scrolled_window)), x);
-	//gtk_adjustment_set_value(gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(m_scrolled_window)), y);
     m_ptOffset.x = x < 0 ? 0 : (x > m_ptSize.x ? m_ptSize.x : x);
     m_ptOffset.y = y < 0 ? 0 : (y > m_ptSize.y ? m_ptSize.y : y);
     Invalidate();
@@ -66,42 +61,32 @@ void CDotView::SetScrollOffset(int x, int y)
 
 void CDotView::SetScrollSize(int w, int h, bool redraw)
 {
-	gint width;
-	gint height;
-	gdk_window_get_size(m_canvas->window, &width, &height);
+	gint width = FB::PluginWindowX11::getWindowWidth();
+	gint height = FB::PluginWindowX11::getWindowHeight();
 
 	m_ptSize.x = w - width;
 	m_ptSize.y = h - height;
-    //gtk_widget_set_size_request(m_canvas, w, h);
 }
 
 bool CDotView::GetClientRectangle(hpcc::RectD & rect)
 {
-	gint x, y;
-	gdk_window_get_position(m_container->window, &x, &y);
-	gint width, height;
-	gdk_window_get_size(m_container->window, &width, &height);
-
-	rect.x = x;
-	rect.y = y;
-	rect.Width = width;
-	rect.Height = height;
-
+	FB::Rect rect2 = FB::PluginWindowX11::getWindowPosition();
+	rect.x = rect2.left;
+	rect.y = rect2.top;
+	rect.Width = rect2.right - rect2.left;
+	rect.Height = rect2.bottom - rect2.top;
+	FB::Rect rect3 = FB::PluginWindowX11::getWindowClipping();
 	return true;
 }
 
-void CDotView::DoPaint(GdkEvent *evt)
+void CDotView::DoPaint(hpcc::RectI bounds)
 {
-	GdkEventExpose * event = reinterpret_cast<GdkEventExpose *>(evt);
-	//GtkAdjustment * hadj = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(win->m_scrolled_window));
-	//GtkAdjustment * vadj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(win->m_scrolled_window));
-
-	//hpcc::RectI rect(hadj->value, vadj->value, hadj->value + hadj->page_size, vadj->value + vadj->page_size);
-	m_buffer->Resize(event->area.width, event->area.height);
-	hpcc::RectI rect(event->area.x, event->area.y, event->area.x + event->area.width, event->area.y + event->area.height);
+	hpcc::RectI rect(bounds);
 	rect.Offset(m_ptOffset.x, m_ptOffset.y);
+
+	m_buffer->Resize(rect.Width(), rect.Height());
 	m_gr->DoRender(rect, true);
-	m_buffer->Draw(m_canvas, event->area.x, event->area.y);
+	m_buffer->Draw(m_canvas, bounds.left, bounds.top);
 }
 
 void CDotView::OnLButtonDown(hpcc::PointD point)
@@ -111,12 +96,10 @@ void CDotView::OnLButtonDown(hpcc::PointD point)
 	m_mouseDownPosY = point.y;
 	m_scrollDownPosX = GetScrollOffsetX();
 	m_scrollDownPosY = GetScrollOffsetY();
-	//SetCapture();
 }
 
 void CDotView::OnLButtonUp(hpcc::PointD point, guint modifierState)
 {
-	//ReleaseCapture();
 	switch (m_mouseDown)
 	{
 	case MOUSEDOWN_DBLCLK:
@@ -190,34 +173,17 @@ int CDotView::OnLayoutComplete(void * wParam, void * lParam)
 
 void CDotView::InvalidateSelection()
 {
-	gdk_window_invalidate_rect(m_canvas->window, NULL, true);
-	/*	hpcc::RectD invalidateRect;
-	if (m_selection->GetInvalidateRect(invalidateRect))
-		InvalidateWorldRect(invalidateRect);
-	if (m_selection->GetPrevInvalidateRect(invalidateRect))
-		InvalidateWorldRect(invalidateRect);
-	 */
+	Invalidate();
 }
 
 void CDotView::InvalidateScreenRect(const hpcc::RectD & screenRect)
 {
-	gdk_window_invalidate_rect(m_canvas->window, NULL, true);
-	/*
-	GdkRectangle r;
-	r.x = screenRect.GetLeft() - GetScrollOffsetX();
-	r.y = screenRect.GetTop() - GetScrollOffsetY();
-	r.width = screenRect.Width + 2;
-	r.height = screenRect.Height + 2;
-	gdk_window_invalidate_rect(m_canvas->window, &r, true);
-	 */
+	Invalidate();
 }
 
 void CDotView::InvalidateWorldRect(const hpcc::RectD & worldRect)
 {
-	gdk_window_invalidate_rect(m_canvas->window, NULL, true);
-	/*
-	InvalidateScreenRect(m_gr->WorldToScreen(worldRect));
-	*/
+	Invalidate();
 }
 
 void CDotView::OnMouseMove(hpcc::PointD point)
@@ -233,22 +199,12 @@ void CDotView::OnMouseMove(hpcc::PointD point)
 			SetScrollOffset(m_scrollDownPosX - deltaX, m_scrollDownPosY - deltaY);
 			if (deltaX || deltaY)
 				m_mouseDown = MOUSEDOWN_MOVED;
-/*			
-			g_object_freeze_notify(G_OBJECT(m_scrolled_window));
-			gtk_adjustment_set_value(gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(m_scrolled_window)), m_scrollDownPosX - deltaX);
-			gtk_adjustment_set_value(gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(m_scrolled_window)), m_scrollDownPosY - deltaY);
-			gdk_window_invalidate_rect(m_scrolled_window->window, NULL, true);
-			g_object_thaw_notify(G_OBJECT(m_scrolled_window));
-
-			m_scrollDownPosX -= deltaX;
-			m_scrollDownPosY -= deltaY;
-*/
 		}
 		break;
 	default:
 		{
 			point.Offset(m_ptOffset);
-			hpcc::IGraphItem * hotItem = NULL;//m_gro->GetItemAt(point.x, point.y);
+			hpcc::IGraphItem * hotItem = NULL;
 			if (!hotItem)
 				hotItem = m_gr->GetItemAt(point.x, point.y);
 			if (m_hotItem->Set(hotItem))
@@ -261,6 +217,28 @@ void CDotView::OnMouseMove(hpcc::PointD point)
 			}
 		}
 		break;
+	}
+}
+
+void CDotView::OnMouseScroll(hpcc::PointD pt, hpcc::PointD delta, guint modifierState)
+{
+	if (!(modifierState & FB::MouseButtonEvent::ModifierState_Control))
+	{
+		hpcc::PointD point = pt;
+		point.Offset(m_ptOffset);
+		hpcc::PointD worldDblClk(point.x, point.y);
+		worldDblClk = m_gr->ScreenToWorld(worldDblClk);
+		double zDelta = delta.x != 0 ? delta.x : delta.y;
+		double scale = m_gr->GetScale();
+		if (zDelta > 0)
+			m_gr->SetScale(scale + 0.05 * scale);
+		else
+			m_gr->SetScale(scale - 0.05 * scale);
+
+		CalcScrollbars();
+		MoveTo(worldDblClk, pt.x, pt.y);
+
+		m_api->fire_Scaled((int)(m_gr->GetScale() * 100));
 	}
 }
 

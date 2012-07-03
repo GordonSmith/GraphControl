@@ -30,7 +30,7 @@ include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/pathplan
 	${GRAPHVIZSRC_DIRS}/lib/common
 	${GRAPHVIZSRC_DIRS}/lib/graph
-	${GRAPHVIZSRC_DIRS}/third-party/include
+	#${GRAPHVIZSRC_DIRS}/third-party/include
 	${GRAPHVIZSRC_DIRS}
 	..
 	)

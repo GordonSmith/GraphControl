@@ -55,10 +55,11 @@ public:
 	void InvalidateScreenRect(const hpcc::RectD & screenRect);
 	void InvalidateWorldRect(const hpcc::RectD & worldRect);
 	//  Linux  ---
-	void DoPaint(GdkEvent * evt);
+	void DoPaint(hpcc::RectI bounds);
 	void OnLButtonDown(hpcc::PointD point);
 	void OnLButtonUp(hpcc::PointD point, guint modifierState);
 	void OnMouseMove(hpcc::PointD point);
+	void OnMouseScroll(hpcc::PointD point, hpcc::PointD delta, guint modifierState);
 	void OnLButtonDblClk(hpcc::PointD point);
 
 	int OnLayoutComplete(void * wParam, void * lParam);

@@ -68,12 +68,11 @@ public:
 		EVENTTYPE_CASE(FB::MouseDoubleClickEvent, onMouseDoubleClick, FB::PluginWindow)
         EVENTTYPE_CASE(FB::MouseUpEvent, onMouseUp, FB::PluginWindow)
         EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
+        EVENTTYPE_CASE(FB::MouseScrollEvent, onMouseScroll, FB::PluginWindow)
 
 		EVENTTYPE_CASE(FB::RefreshEvent, onRefresh, FB::PluginWindow)
 #ifdef XP_WIN
 		EVENTTYPE_CASE(FB::WindowsEvent, onWindows, FB::PluginWindow)
-#elif defined(XP_UNIX)
-		EVENTTYPE_CASE(FB::X11Event, onX11, FB::PluginWindow)
 #endif
 
         EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindow)
@@ -85,14 +84,13 @@ public:
 	virtual bool onMouseDoubleClick(FB::MouseDoubleClickEvent *evt, FB::PluginWindow *);
     virtual bool onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *);
     virtual bool onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *);
+    virtual bool onMouseScroll(FB::MouseScrollEvent *evt, FB::PluginWindow *);
 
 	virtual bool onRefresh(FB::RefreshEvent *evt, FB::PluginWindow *);
 
 	void DoRender(int x, int y, int width, int height, bool resized);
 #ifdef XP_WIN
 	virtual bool onWindows(FB::WindowsEvent *evt, FB::PluginWindow *);
-#elif defined(XP_UNIX)
-	virtual bool onX11(FB::X11Event *evt, FB::PluginWindow *);
 #endif
 
 	virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);

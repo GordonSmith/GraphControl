@@ -15,9 +15,9 @@ set (	SRCS
 
 include_directories (
 	${GRAPHVIZSRC_DIRS}/plugin/neato_layout
-	${GRAPHVIZSRC_DIRS}/plugin/libltdl
-	${GRAPHVIZSRC_DIRS}/lib/agutil
-	${GRAPHVIZSRC_DIRS}/windows/lib/cdt
+	#${GRAPHVIZSRC_DIRS}/plugin/libltdl
+	#${GRAPHVIZSRC_DIRS}/lib/agutil
+	#${GRAPHVIZSRC_DIRS}/windows/lib/cdt
 	${GRAPHVIZSRC_DIRS}/lib/graph
 	${GRAPHVIZSRC_DIRS}/lib/vpsc
 	${GRAPHVIZSRC_DIRS}/lib/vmalloc

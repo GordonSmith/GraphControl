@@ -153,9 +153,21 @@ bool HPCCSystemsGraphViewControl::onMouseMove(FB::MouseMoveEvent *evt, FB::Plugi
     return true;
 }
 
+bool HPCCSystemsGraphViewControl::onMouseScroll(FB::MouseScrollEvent *evt, FB::PluginWindow *)
+{
+#if defined(XP_UNIX)
+    m_wnd->OnMouseScroll(hpcc::PointD(evt->m_x, evt->m_y), hpcc::PointD(evt->m_dx, evt->m_dy), evt->m_state);
+#endif
+    return true;
+}
+
 bool HPCCSystemsGraphViewControl::onRefresh(FB::RefreshEvent *evt, FB::PluginWindow *)
 {
-	return false;
+#if defined(XP_UNIX)
+	hpcc::RectI bounds(evt->bounds.left, evt->bounds.top, evt->bounds.right - evt->bounds.left, evt->bounds.bottom - evt->bounds.top);
+    m_wnd->DoPaint(bounds);
+#endif
+	return true;
 }
 
 void HPCCSystemsGraphViewControl::DoRender(int x, int y, int width, int height, bool resized)
@@ -184,39 +196,6 @@ bool HPCCSystemsGraphViewControl::onWindows(FB::WindowsEvent *evt, FB::PluginWin
 		{
 			ATLTRACE("HPCCSystemsGraphViewControl::onWindows\n");
 			m_wnd->SendMessage(evt->uMsg, evt->wParam, evt->lParam);
-			return true;
-		}
-		break;
-	}
-	return false;
-}
-#elif defined(XP_UNIX)
-bool HPCCSystemsGraphViewControl::onX11(FB::X11Event *evt, FB::PluginWindow *)
-{
-	switch(evt->m_event->type)
-	{
-	case GDK_EXPOSE:
-		{
-		    m_wnd->DoPaint(evt->m_event);
-			return true;
-		}
-		break;
-
-	case GDK_CONFIGURE:
-		{
-			GdkEventConfigure * event = reinterpret_cast<GdkEventConfigure *>(evt->m_event);
-			if (CDotView * win = GetWindow()->get_as<CDotView>())
-			{
-				GdkRectangle area;
-				area.x = event->x;
-				area.y = event->y;
-				area.width = event->width;
-				area.height = event->height;
-				//win->DoRender(area);
-				//gtk_widget_set_size_request (win->m_scrolled_window, area.width, area.height);
-				//gtk_widget_set_size_request (win->m_canvas, 150, 100);
-			}
-			//evt->m_result = TRUE;
 			return true;
 		}
 		break;

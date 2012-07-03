@@ -40,7 +40,7 @@ set (	SRCS
 
 include_directories ( 
 	${GRAPHVIZSRC_DIRS}/lib/gd
-	${GRAPHVIZSRC_DIRS}/third-party/include
+	#${GRAPHVIZSRC_DIRS}/third-party/include
 	${GRAPHVIZSRC_DIRS}/third-party/include/freetype2
 	${GRAPHVIZSRC_DIRS}
 	)

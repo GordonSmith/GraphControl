@@ -11,7 +11,6 @@ project( graphrender )
 # *********************************************************************
 
 include_directories (
-	gen
 	../graphdb
 	../agg
 	${AGGSRC_DIRS}/agg-2.4/include
