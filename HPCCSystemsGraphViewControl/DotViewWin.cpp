@@ -104,10 +104,10 @@ void CDotView::OnSize(UINT nType, CSize size)
 	ATLTRACE("size.cx:  %i\t", size.cx);
 	ATLTRACE("size.cy:  %i\n", size.cy);
 	//  Filter out silly sizes from web browser (dojo?)  ---
-	if (size.cx > 10000 || size.cy > 10000)
-		SetMsgHandled(true);
-	else
+	if (size.cx >= 0 && size.cx < 10000 && size.cy >= 0 && size.cy < 10000)
 		SetMsgHandled(false);
+	else
+		SetMsgHandled(true);
 }
 
 void CDotView::OnLButtonDown(UINT nFlags, CPoint point)

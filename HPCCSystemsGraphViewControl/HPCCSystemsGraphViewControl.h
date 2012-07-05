@@ -64,6 +64,7 @@ public:
     virtual bool isWindowless() { return false; }
 
     BEGIN_PLUGIN_EVENT_MAP()
+		/*
         EVENTTYPE_CASE(FB::MouseDownEvent, onMouseDown, FB::PluginWindow)
 		EVENTTYPE_CASE(FB::MouseDoubleClickEvent, onMouseDoubleClick, FB::PluginWindow)
         EVENTTYPE_CASE(FB::MouseUpEvent, onMouseUp, FB::PluginWindow)
@@ -74,6 +75,8 @@ public:
 #ifdef XP_WIN
 		EVENTTYPE_CASE(FB::WindowsEvent, onWindows, FB::PluginWindow)
 #endif
+		*/
+		EVENTTYPE_CASE(FB::ResizedEvent, onResized, FB::PluginWindow)
 
         EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindow)
         EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindow)
@@ -92,6 +95,8 @@ public:
 #ifdef XP_WIN
 	virtual bool onWindows(FB::WindowsEvent *evt, FB::PluginWindow *);
 #endif
+
+	virtual bool onResized(FB::ResizedEvent *evt, FB::PluginWindow *);
 
 	virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
 	virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
