@@ -33,8 +33,8 @@ CGraph::CGraph() : CCluster()  //- 'this' should not be used in base member init
 {
 	m_graph = this;
 	m_parent = NULL;
-	SetProperty("id", "0");
-	SetExternalID(hpcc::GRAPH_TYPE_GRAPH, "0", (IGraph *)this);
+	SetProperty("id", GetIDString());
+	SetExternalID(hpcc::GRAPH_TYPE_GRAPH, GetIDString(), (IGraph *)this);
 }
 
 void CGraph::Clear()
@@ -46,8 +46,8 @@ void CGraph::Clear()
 	m_allItems.clear();
 	m_externalIDs.clear();
 	m_rexternalIDs.clear();
-	SetProperty("id", "0");
-	SetExternalID(hpcc::GRAPH_TYPE_GRAPH, "0", (IGraph *)this);
+	SetProperty("id", GetIDString());
+	SetExternalID(hpcc::GRAPH_TYPE_GRAPH, GetIDString(), (IGraph *)this);
 }
 
 ICluster * CGraph::CreateCluster()
@@ -220,14 +220,13 @@ void CGraph::SetExternalID(GRAPH_TYPE type, const std::string & id, IGraphItem *
 {
 	assert(!id.empty());
 	assert(item);
-	//GJS TODO:  Should be true, but there is a bug in the GetLocalisedXGMML:  assert(GetGraphItem(type, id) == NULL || GetGraphItem(type, id) == item);
+	assert(GetGraphItem(type, id) == NULL || GetGraphItem(type, id) == item);
 	m_externalIDs[GraphTypeStringPair(type, id)] = item->GetID();
 	m_rexternalIDs[item->GetID()] = GraphTypeStringPair(type, id);
 }
 
 const char * CGraph::GetExternalID(int item) const
 {
-	assert(item != 0);
 	GraphItemExternalIDMap::const_iterator found = m_rexternalIDs.find(item);
 	if(found != m_rexternalIDs.end())
 		return found->second.second.c_str();

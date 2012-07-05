@@ -92,14 +92,17 @@ public:
 				}
 			}
 
-			unsigned int id = StringToUInt(e->m_attr["id"].c_str());
-			if (id)
-			{
-				m_currentItem = m_graph->GetGraphItem(id);
-				m_currentElementG = new ElementG();
-				m_currentItem->SetProperty(SVG_PROP_ELEMENTG, m_currentElementG);
-			}
+			if (boost::algorithm::equals(e->m_attr["class"], "graph"))
+				m_currentItem = m_graph->GetGraphItem(GRAPH_TYPE_GRAPH, e->m_attr["id"]);
+			else if (boost::algorithm::equals(e->m_attr["class"], "cluster"))
+				m_currentItem = m_graph->GetGraphItem(GRAPH_TYPE_CLUSTER, e->m_attr["id"]);
+			else if (boost::algorithm::equals(e->m_attr["class"], "node"))
+				m_currentItem = m_graph->GetGraphItem(GRAPH_TYPE_VERTEX, e->m_attr["id"]);
+			else if (boost::algorithm::equals(e->m_attr["class"], "edge"))
+				m_currentItem = m_graph->GetGraphItem(GRAPH_TYPE_EDGE, e->m_attr["id"]);
 			assert(m_currentItem);
+			m_currentElementG = new ElementG();
+			m_currentItem->SetProperty(SVG_PROP_ELEMENTG, m_currentElementG);
 		}
 
 		return;

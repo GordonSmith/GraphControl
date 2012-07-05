@@ -31,12 +31,12 @@ static unsigned int g_id = 0;
 CGraphItem::CGraphItem()
 {
 	m_graph = NULL;
-	SetID(++g_id);
+	SetID(g_id++);
 }
 
 CGraphItem::CGraphItem(IGraph * graph) : m_graph(graph)
 {
-	SetID(++g_id);
+	SetID(g_id++);
 }
 
 void CGraphItem::SetID(unsigned int id)

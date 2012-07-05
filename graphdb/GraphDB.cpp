@@ -91,13 +91,13 @@ const char * const VertexTpl =
 const char * const EdgeTpl = 
 "%1%->%2%[id=\"%3%\" label=\"%4%\"%5%];\r\n";
 
-void WalkClusters(const ICluster * cluster, std::string & dot, int depth)
+void WalkClusters(const IGraph * graph, const ICluster * cluster, std::string & dot, int depth)
 {
 	std::string content;
 	for(IClusterSet::const_iterator itr = cluster->GetClusters().begin(); itr != cluster->GetClusters().end(); ++itr)
 	{
 		std::string cluster;
-		WalkClusters(itr->get(), cluster, depth + 1);
+		WalkClusters(graph, itr->get(), cluster, depth + 1);
 		content += cluster;
 	}
 
@@ -107,7 +107,7 @@ void WalkClusters(const ICluster * cluster, std::string & dot, int depth)
 		if (v->GetPropertyCUnknown(DOT_PROP_CDOTITEM))
 		{
 			CDotItem * dotItem = (CDotItem *)v->GetPropertyCUnknown(DOT_PROP_CDOTITEM);
-			content += dotItem->ToDot(v->GetIDString(), "");
+			content += dotItem->ToDot(graph->GetExternalID(v->GetID()), "");
 		}
 		else 
 		{
@@ -121,7 +121,7 @@ void WalkClusters(const ICluster * cluster, std::string & dot, int depth)
 			if (v->HasPropertyString(DOT_VERTEX_STYLE))
 				props += (boost::format(PropTpl) % "style" % v->GetPropertyString(DOT_VERTEX_STYLE)).str();
 
-			content += (boost::format(VertexTpl) % v->GetIDString() % v->GetPropertyString(DOT_LABEL) % props.c_str()).str();
+			content += (boost::format(VertexTpl) % graph->GetExternalID(v->GetID()) % v->GetPropertyString(DOT_LABEL) % props.c_str()).str();
 		}
 	}
 
@@ -130,14 +130,15 @@ void WalkClusters(const ICluster * cluster, std::string & dot, int depth)
 		if (cluster->GetPropertyCUnknown(DOT_PROP_CDOTITEM))
 		{
 			CDotItem * dotItem = (CDotItem *)cluster->GetPropertyCUnknown(DOT_PROP_CDOTITEM);
-			dot += dotItem->ToDot(cluster->GetIDString(), content);
+			dot += dotItem->ToDot(graph->GetExternalID(cluster->GetID()), content);
 		}
 		else
 		{
 			std::string label = cluster->GetPropertyString(DOT_LABEL);
 			if (label.empty())
 				label = cluster->GetPropertyString(DOT_ID);
-			dot += (boost::format(ClusterTpl) % cluster->GetIDString() % label % content % "").str();
+			
+			dot += (boost::format(ClusterTpl) % graph->GetExternalID(cluster->GetID()) % label % content % "").str();
 		}
 	}
 	else
@@ -154,7 +155,7 @@ void WalkEdges(const IGraph * graph, std::string & content)
 		if (e->GetPropertyCUnknown(DOT_PROP_CDOTITEM))
 		{
 			CDotItem * dotItem = (CDotItem *)e->GetPropertyCUnknown(DOT_PROP_CDOTITEM);
-			content += dotItem->ToDot(e->GetIDString(), "");
+			content += dotItem->ToDot(graph->GetExternalID(e->GetID()), "");
 		}
 		else
 		{
@@ -188,7 +189,7 @@ void WalkEdges(const IGraph * graph, std::string & content)
 			if (e->HasPropertyString(DOT_EDGE_STYLE))
 				props += (boost::format(PropTpl) % "style" % e->GetPropertyString(DOT_EDGE_STYLE)).str();
 
-			content += (boost::format(EdgeTpl) % from->GetIDString() % to->GetIDString() % e->GetIDString() % e->GetPropertyString(DOT_LABEL) % props.c_str()).str();
+			content += (boost::format(EdgeTpl) % graph->GetExternalID(from->GetID()) % graph->GetExternalID(to->GetID()) % graph->GetExternalID(e->GetID()) % e->GetPropertyString(DOT_LABEL) % props.c_str()).str();
 		}
 	}
 }
@@ -197,7 +198,7 @@ const char * WriteDOT(const IGraph * graph, std::string & dot)
 {
 	dot.clear();
 	std::string content;
-	WalkClusters(graph, content, 0);
+	WalkClusters(graph, graph, content, 0);
 	WalkEdges(graph, content);
 
 	std::string layout = graph->GetPropertyString(PROP_LAYOUT);
@@ -212,7 +213,7 @@ const char * WriteDOT(const IGraph * graph, std::string & dot)
 	if (graph->GetPropertyCUnknown(DOT_PROP_CDOTITEM))  
 	{
 		CDotItem * dotItem = (CDotItem *)graph->GetPropertyCUnknown(DOT_PROP_CDOTITEM);
-		dot = dotItem->ToDot(graph->GetIDString(), content);
+		dot = dotItem->ToDot(graph->GetExternalID(graph->GetID()), content);
 	}
 	else
 	{
