@@ -126,7 +126,7 @@ bool HPCCSystemsGraphViewControl::onMouseDown(FB::MouseDownEvent *evt, FB::Plugi
 #if defined(XP_UNIX)
     m_wnd->OnLButtonDown(hpcc::PointD(evt->m_x, evt->m_y));
 #endif
-    return true;
+    return false;
 }
 
 bool HPCCSystemsGraphViewControl::onMouseDoubleClick(FB::MouseDoubleClickEvent *evt, FB::PluginWindow *)
@@ -134,7 +134,7 @@ bool HPCCSystemsGraphViewControl::onMouseDoubleClick(FB::MouseDoubleClickEvent *
 #if defined(XP_UNIX)
     m_wnd->OnLButtonDblClk(hpcc::PointD(evt->m_x, evt->m_y));
 #endif
-	return true;
+    return false;
 }
 
 bool HPCCSystemsGraphViewControl::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *)
@@ -142,7 +142,7 @@ bool HPCCSystemsGraphViewControl::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWin
 #if defined(XP_UNIX)
     m_wnd->OnLButtonUp(hpcc::PointD(evt->m_x, evt->m_y), evt->m_state);
 #endif
-    return true;
+    return false;
 }
 
 bool HPCCSystemsGraphViewControl::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
@@ -150,12 +150,12 @@ bool HPCCSystemsGraphViewControl::onMouseMove(FB::MouseMoveEvent *evt, FB::Plugi
 #if defined(XP_UNIX)
     m_wnd->OnMouseMove(hpcc::PointD(evt->m_x, evt->m_y));
 #endif
-    return true;
+    return false;
 }
 
 bool HPCCSystemsGraphViewControl::onRefresh(FB::RefreshEvent *evt, FB::PluginWindow *)
 {
-	return false;
+    return false;
 }
 
 void HPCCSystemsGraphViewControl::DoRender(int x, int y, int width, int height, bool resized)
@@ -175,7 +175,12 @@ bool HPCCSystemsGraphViewControl::onWindows(FB::WindowsEvent *evt, FB::PluginWin
 			//if (CDotView * win = m_Window->get_as<CDotView>())
 			{
 				CRect rcClient;
-				GetClientRect(evt->hWnd, rcClient);
+				int debug = GetClientRect(evt->hWnd, rcClient);
+				ATLTRACE("debug:  %i\t", debug);
+				ATLTRACE("rcClient.left:  %i\t", rcClient.left);
+				ATLTRACE("rcClient.top:  %i\t", rcClient.top);
+				ATLTRACE("rcClient.right:  %i\t", rcClient.right);
+				ATLTRACE("rcClient.bottom:  %i\n", rcClient.bottom);
 				m_wnd->MoveWindow(rcClient.left, rcClient.top, rcClient.Width(), rcClient.Height());
 			}
 		}
@@ -224,6 +229,20 @@ bool HPCCSystemsGraphViewControl::onX11(FB::X11Event *evt, FB::PluginWindow *)
 	return false;
 }
 #endif
+
+bool HPCCSystemsGraphViewControl::onResized(FB::ResizedEvent *evt, FB::PluginWindow * win)
+{
+	//CRect rcClient;
+	FB::Rect rcClient = win->getWindowPosition();
+	//int debug = GetClientRect(FB::PluginCore::m_hWnd, rcClient);
+	ATLTRACE("rcClient.left:  %i\t", rcClient.left);
+	ATLTRACE("rcClient.top:  %i\t", rcClient.top);
+	ATLTRACE("rcClient.right:  %i\t", rcClient.right);
+	ATLTRACE("rcClient.bottom:  %i\n", rcClient.bottom);
+	m_wnd->ResizeClient(rcClient.right -rcClient.left, rcClient.bottom - rcClient.top);
+	//m_wnd->MoveWindow(rcClient.left, rcClient.top, rcClient.right -rcClient.left, rcClient.bottom - rcClient.top);
+	return false;
+}
 
 bool HPCCSystemsGraphViewControl::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow * pw)
 {
