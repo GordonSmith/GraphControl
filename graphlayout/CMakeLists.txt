@@ -127,8 +127,7 @@ target_link_libraries ( graphlayout
 
 # *********************************************************************
 
-INSTALL(TARGETS graphlayout 
-	RUNTIME DESTINATION bin COMPONENT PLUGIN
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib/static
-)
+if (NOT WITH_STATIC_RUNTIME)
+	install ( TARGETS graphlayout RUNTIME DESTINATION bin LIBRARY DESTINATION lib )
+endif (NOT WITH_STATIC_RUNTIME)
+

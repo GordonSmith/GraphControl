@@ -1,23 +1,14 @@
 project ( GraphControl )
 cmake_minimum_required (VERSION 2.6)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
 
-if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set ( ARCH64BIT 1 )
-else ()
-	set ( ARCH64BIT 0 )
-endif ()
-message ("-- 64bit architecture is ${ARCH64BIT}")
+include ( "${CMAKE_SOURCE_DIR}/version.cmake" )
+include ( "${CMAKE_MODULE_PATH}/tag.cmake" )
+include ( "${CMAKE_MODULE_PATH}/Utils.cmake" )
+include ( "${CMAKE_MODULE_PATH}/Externals.cmake" )
+
 ##################################################################
-
-# Build tag generation
-
-set ( HPCC_MAJOR 6 )
-set ( HPCC_MINOR 8 )
-set ( HPCC_POINT 1 )
-set ( HPCC_BUILD 0 )
-set ( HPCC_VERSION ${HPCC_MAJOR}.${HPCC_MINOR}.${HPCC_POINT}.${HPCC_BUILD} )
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/config.h.in"
@@ -33,24 +24,42 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/npHPCCSystemsGraphViewControl.inf.in"
   "${PROJECT_SOURCE_DIR}/npHPCCSystemsGraphViewControl.inf"
   )
-##################################################################
 
-option(WITH_STATIC_RUNTIME "Build with static runtimes" OFF)
+##################################################################
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin" CACHE PATH "Location of BIN files")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin" CACHE PATH "Location of LIB files")
+
+if ( NOT PREFIX )
+if ( WIN32 )
+    set( PREFIX "$ENV{ProgramFiles(x86)}" )
+    string(REGEX REPLACE "\\\\" "/" PREFIX ${PREFIX})    
+else (WIN32)
+    set( PREFIX "/opt" )
+endif (WIN32)    
+endif()
+
+if ( NOT DIR_NAME )
+    set( DIR_NAME "HPCCSystems" )
+endif()
+
+set ( CMAKE_INSTALL_PREFIX "${PREFIX}/${DIR_NAME}/${HPCC_VERSION}/graphcontrol" )
+message ( "-- Install Location is ${CMAKE_INSTALL_PREFIX}" )
+
+option(WITH_STATIC_RUNTIME "Build with static runtimes" OFF)
+
 if (WIN32)
 elseif(APPLE)
 elseif(UNIX)
 	option(WITH_BUILD_TARGET_IN_PLUGINS_FOLDER "Build directly into $HOME/.mozilla/plugins" OFF)
+	set(PLUGIN_DIRECTORY "lib/mozilla/plugins" CACHE STRING "Target Install for Firefox Plugin")
 	if (WITH_BUILD_TARGET_IN_PLUGINS_FOLDER)
 		set(EXECUTABLE_OUTPUT_PATH "~/.mozilla/plugins")
 		set(LIBRARY_OUTPUT_PATH "~/.mozilla/plugins")
 	endif()
 endif()
 
-include ( "${CMAKE_SOURCE_DIR}/cmake/Modules/Utils.cmake" )
-include ( "${CMAKE_SOURCE_DIR}/cmake/Modules/Externals.cmake" )
+##################################################################
 
 if (WIN32)
 	add_definitions(-DFB_WIN=1 -DXP_WIN=1 -D_CRT_SECURE_NO_WARNINGS)
@@ -81,16 +90,6 @@ elseif(APPLE)
 	add_definitions(-DFB_MACOSX=1)
 elseif(UNIX)
 	add_definitions(-DFB_X11=1 -DXP_UNIX=1)
-	find_package(PkgConfig)
-
-	# GTK is required for XEmbed to work
-	if (NOT GTK_INCLUDE_DIRS)
-		pkg_check_modules(GTK REQUIRED gtk+-2.0)
-		set (GTK_INCLUDE_DIRS ${GTK_INCLUDE_DIRS} CACHE INTERNAL "GTK include dirs")
-		set (GTK_LIBRARIES ${GTK_LIBRARIES} CACHE INTERNAL "GTK include dirs")
-		set (GTK_LIBRARY_DIRS ${GTK_LIBRARY_DIRS} CACHE INTERNAL "GTK include dirs")
-		set (GTK_LDFLAGS ${GTK_LDFLAGS} CACHE INTERNAL "GTK include dirs")
-	endif()
 
 	set(gecko_defs -DXP_UNIX)
 	set(fPIC_flag "-fPIC")
@@ -98,6 +97,8 @@ elseif(UNIX)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${gecko_defs} ${fPIC_flag}")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${gecko_defs} ${fPIC_flag}")
 endif()
+
+##################################################################
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -111,14 +112,6 @@ elseif(APPLE)
 elseif(UNIX)
 endif()
 
-if(WIN32)
-elseif(APPLE)
-elseif(UNIX)
-	set(PLUGIN_DIRECTORY "lib/mozilla/plugins" CACHE STRING "Directory to install Firefox plugin to")
-endif()
-
-##################################################################
-
 add_subdirectory (graphlayout)
 add_subdirectory (graphdb)
 add_subdirectory (graphrender)
@@ -130,9 +123,7 @@ if(WIN32)
 	set ( CPACK_SOURCE_GENERATOR NSIS )
 	if ( NOT WITH_STATIC_RUNTIME )
 		include ( InstallRequiredSystemLibraries )
-		INSTALL(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-		DESTINATION ${CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION}
-		COMPONENT PLUGIN)
+		#INSTALL(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION ${CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION} )
 	endif ( NOT WITH_STATIC_RUNTIME )
 elseif(APPLE)
 elseif(UNIX)
@@ -144,7 +135,7 @@ set ( CPACK_COMPONENTS_ALL PLUGIN )
 set ( CPACK_COMPONENT_PLUGIN_DISPLAY_NAME "Graph Control" )
 set ( CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\hpccsystems.com" )
 set ( CPACK_PACKAGE_CONTACT "HPCCSystems <ossdevelopment@lexisnexis.com>" )
-set ( CPACK_PACKAGE_NAME "hpccsystems-graphcontrol")
+set ( CPACK_PACKAGE_NAME ${HPCC_PACKAGE_NAME})
 set ( CPACK_PACKAGE_VENDOR "HPCC Systems" )
 if ( ${ARCH64BIT} EQUAL 1 )
 	set ( CPACK_NSIS_DISPLAY_NAME "Graph Control x64" )

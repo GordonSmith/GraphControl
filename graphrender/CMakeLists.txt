@@ -107,8 +107,7 @@ target_link_libraries ( graphrender
 
 # *********************************************************************
 
-INSTALL(TARGETS graphrender 
-	RUNTIME DESTINATION bin COMPONENT PLUGIN
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib/static
-)
+if (NOT WITH_STATIC_RUNTIME)
+	install ( TARGETS graphrender RUNTIME DESTINATION bin LIBRARY DESTINATION lib )
+endif (NOT WITH_STATIC_RUNTIME)
+

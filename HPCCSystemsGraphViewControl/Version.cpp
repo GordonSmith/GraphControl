@@ -29,7 +29,7 @@ const char * GetVersionString()
 	static std::string g_version;
 	if (g_version.empty())
 	{
-		g_version = (boost::format("%1%.%2%.%3%.%4%") % HPCC_MAJOR % HPCC_MINOR % HPCC_POINT % HPCC_BUILD).str();
+		g_version = (boost::format("%1%.%2%.%3%.%4%") % HPCC_MAJOR % HPCC_MINOR % HPCC_POINT % HPCC_SEQUENCE).str();
 	}
 	return g_version.c_str();
 }
