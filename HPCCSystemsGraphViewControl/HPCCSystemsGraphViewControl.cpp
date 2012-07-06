@@ -204,23 +204,52 @@ bool HPCCSystemsGraphViewControl::onWindows(FB::WindowsEvent *evt, FB::PluginWin
 }
 #endif
 
-bool HPCCSystemsGraphViewControl::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow * pw)
+bool HPCCSystemsGraphViewControl::onX11(FB::X11Event *evt, FB::PluginWindow *)
 {
-#if defined(XP_UNIX)
-	if (CDotView * win = GetWindow()->get_as<CDotView>())
 	{
-		assert(m_wnd == NULL);
-		m_wnd = win;
-		//m_wnd->LoadTestData();
-		if (FB::JSAPIPtr root_api = getRootJSAPI())
+	case GDK_EXPOSE:
 		{
+		    m_wnd->DoPaint(evt->m_event);
+			return true;
+		}
+		break;
+
+	case GDK_CONFIGURE:
+		{
+			GdkEventConfigure * event = reinterpret_cast<GdkEventConfigure *>(evt->m_event);
+			if (CDotView * win = GetWindow()->get_as<CDotView>())
+			{
+				area.y = event->y;
+				area.width = event->width;
+				area.height = event->height;
+		if (FB::JSAPIPtr root_api = getRootJSAPI())
+				//gtk_widget_set_size_request (win->m_canvas, 150, 100);
 			HPCCSystemsGraphViewControlAPI * api = static_cast<HPCCSystemsGraphViewControlAPI *>(root_api.get());
-            assert(api != NULL);
 			m_wnd->m_api = api;
 			api->m_callback = m_wnd;
 		}
+		break;
 	}
-#elif defined (XP_WIN)
+	return false;
+}
+#endif
+
+bool HPCCSystemsGraphViewControl::onResized(FB::ResizedEvent *evt, FB::PluginWindow * win)
+{
+	//CRect rcClient;
+	FB::Rect rcClient = win->getWindowPosition();
+	//int debug = GetClientRect(FB::PluginCore::m_hWnd, rcClient);
+	ATLTRACE("rcClient.left:  %i\t", rcClient.left);
+	ATLTRACE("rcClient.top:  %i\t", rcClient.top);
+	ATLTRACE("rcClient.right:  %i\t", rcClient.right);
+	ATLTRACE("rcClient.bottom:  %i\n", rcClient.bottom);
+	m_wnd->ResizeClient(rcClient.right -rcClient.left, rcClient.bottom - rcClient.top);
+	//m_wnd->MoveWindow(rcClient.left, rcClient.top, rcClient.right -rcClient.left, rcClient.bottom - rcClient.top);
+	return false;
+}
+
+bool HPCCSystemsGraphViewControl::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow * pw)
+#if defined (XP_WIN)
 	if (FB::PluginWindowWin * win = GetWindow()->get_as<FB::PluginWindowWin>())
 	{
 		assert(m_wnd == NULL);
@@ -236,6 +265,21 @@ bool HPCCSystemsGraphViewControl::onWindowAttached(FB::AttachedEvent *evt, FB::P
 			api->m_callback = m_wnd;
 		}
 	}
+#elif defined(XP_MACOSX)
+#elif defined(XP_UNIX)
+	if (CDotView * win = GetWindow()->get_as<CDotView>())
+	{
+		assert(m_wnd == NULL);
+		m_wnd = win;
+		//m_wnd->LoadTestData();
+		if (FB::JSAPIPtr root_api = getRootJSAPI())
+		{
+			HPCCSystemsGraphViewControlAPI * api = static_cast<HPCCSystemsGraphViewControlAPI *>(root_api.get());
+            assert(api != NULL);
+			m_wnd->m_api = api;
+			api->m_callback = m_wnd;
+		}
+	}
 #endif
 	return false;
 }
@@ -243,10 +287,11 @@ bool HPCCSystemsGraphViewControl::onWindowAttached(FB::AttachedEvent *evt, FB::P
 bool HPCCSystemsGraphViewControl::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *)
 {
 	assert(m_wnd != NULL);
-#if defined(XP_UNIX)
-#elif defined (XP_WIN)
+#if defined (XP_WIN)
 	m_wnd->DestroyWindow();
 	delete m_wnd;
+#elif defined(XP_MACOSX)
+#elif defined(XP_UNIX)
 #endif
 	m_wnd = NULL;
 	return false;

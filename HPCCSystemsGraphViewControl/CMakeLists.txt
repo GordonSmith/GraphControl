@@ -76,6 +76,8 @@ SOURCE_GROUP(Win FILES ${SRCS_WIN} ${SRCS_WIN_NO_PRECOMPILED_HEADERS})
 # OSX *****************************************************************
 
 set (	SRCS_APPLE
+	DotViewMac.cpp
+	DotViewMac.h
 	)
 
 SOURCE_GROUP(OSX FILES ${SRCS_APPLE})

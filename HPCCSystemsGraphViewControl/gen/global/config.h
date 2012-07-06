@@ -30,9 +30,9 @@
 /* #undef FB_ATLREG_MACHINEWIDE */
 #if FB_GUI_DISABLED == 1
 #define FBMAC_USE_CARBON                    0
-#define FBMAC_USE_COCOA                     0
+#define FBMAC_USE_COCOA                     1
 #define FBMAC_USE_QUICKDRAW                 0
-#define FBMAC_USE_COREGRAPHICS              0
+#define FBMAC_USE_COREGRAPHICS              1
 #define FBMAC_USE_COREANIMATION             0
 #define FBMAC_USE_INVALIDATINGCOREANIMATION 0
 #else
@@ -41,6 +41,6 @@
 #define FBMAC_USE_QUICKDRAW                 0
 #define FBMAC_USE_COREGRAPHICS              1
 #define FBMAC_USE_COREANIMATION             0
-#define FBMAC_USE_INVALIDATINGCOREANIMATION 
+#define FBMAC_USE_INVALIDATINGCOREANIMATION 0
 #endif
 #define FB_

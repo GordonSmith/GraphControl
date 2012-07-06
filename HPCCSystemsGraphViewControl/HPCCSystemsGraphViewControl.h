@@ -25,6 +25,7 @@
 #include "PluginWindow.h"
 #ifdef XP_WIN
 #include "PluginEvents/WindowsEvent.h"
+#elif defined(XP_MACOSX)
 #elif defined(XP_UNIX)
 #include "PluginEvents/X11Event.h"
 #endif
@@ -36,6 +37,8 @@
 #ifdef XP_WIN
 #include "DotViewWin.h"
 #elif defined(XP_UNIX)
+#include "DotViewMac.h"
+#elif defined(XP_MACOSX)
 #include "DotViewX11.h"
 #endif
 
@@ -94,6 +97,8 @@ public:
 	void DoRender(int x, int y, int width, int height, bool resized);
 #ifdef XP_WIN
 	virtual bool onWindows(FB::WindowsEvent *evt, FB::PluginWindow *);
+#elif defined(XP_MACOSX)
+#elif defined(XP_UNIX)
 #endif
 
 	virtual bool onResized(FB::ResizedEvent *evt, FB::PluginWindow *);

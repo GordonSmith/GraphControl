@@ -87,7 +87,11 @@ if (WIN32)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /D BOOST_ALL_NO_LIB=1")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D BOOST_ALL_NO_LIB=1")
 elseif(APPLE)
-	add_definitions(-DFB_MACOSX=1)
+	add_definitions(-DFB_MACOSX=1 -DXP_MACOSX=1 -DXP_UNIX=1)
+
+    set(gecko_defs "${gecko_defs} -DXP_MACOSX -DXP_UNIX")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${gecko_defs}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${gecko_defs}")
 elseif(UNIX)
 	add_definitions(-DFB_X11=1 -DXP_UNIX=1)
 

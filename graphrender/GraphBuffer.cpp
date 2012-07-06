@@ -26,7 +26,7 @@
 #ifdef WIN32
 #include <platform/win32/agg_win32_bmp.h>
 #elif FB_MACOSX
-#include "x11_pixel_map.h"
+#include <platform/mac/agg_mac_pmap.h>
 #elif FB_X11
 #include "x11_pixel_map.h"
 #endif
@@ -74,7 +74,7 @@ public:
 #if defined WIN32
 		return -m_pixelmap.stride();
 #elif FB_MACOSX
-		return m_pixelmap.stride();
+		return m_pixelmap.row_bytes();
 #elif FB_X11
 		return m_pixelmap.stride();
 #endif
@@ -86,9 +86,9 @@ public:
 		m_pixelmap.draw(h_dc, device_rect, bmp_rect);
 	}
 #elif FB_MACOSX
-    void Draw(GtkWidget * widget, int dest_x, int dest_y) const
+    void Draw(WindowRef window, int dest_x, int dest_y) const
     {
-        m_pixelmap.draw(widget, dest_x, dest_y);
+        m_pixelmap.draw(window, dest_x, dest_y);
     }
 #elif FB_X11
     void Draw(GtkWidget * widget, int dest_x, int dest_y) const
