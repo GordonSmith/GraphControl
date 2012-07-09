@@ -123,7 +123,8 @@ FB::JSAPIPtr HPCCSystemsGraphViewControl::createJSAPI()
 
 bool HPCCSystemsGraphViewControl::onMouseDown(FB::MouseDownEvent *evt, FB::PluginWindow *)
 {
-#if defined(XP_UNIX)
+#if defined(XP_MACOSX)
+#elif defined(XP_UNIX)
     m_wnd->OnLButtonDown(hpcc::PointD(evt->m_x, evt->m_y));
 #endif
     return true;
@@ -131,7 +132,8 @@ bool HPCCSystemsGraphViewControl::onMouseDown(FB::MouseDownEvent *evt, FB::Plugi
 
 bool HPCCSystemsGraphViewControl::onMouseDoubleClick(FB::MouseDoubleClickEvent *evt, FB::PluginWindow *)
 {
-#if defined(XP_UNIX)
+#if defined(XP_MACOSX)
+#elif defined(XP_UNIX)
     m_wnd->OnLButtonDblClk(hpcc::PointD(evt->m_x, evt->m_y));
 #endif
 	return true;
@@ -139,7 +141,8 @@ bool HPCCSystemsGraphViewControl::onMouseDoubleClick(FB::MouseDoubleClickEvent *
 
 bool HPCCSystemsGraphViewControl::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *)
 {
-#if defined(XP_UNIX)
+#if defined(XP_MACOSX)
+#elif defined(XP_UNIX)
     m_wnd->OnLButtonUp(hpcc::PointD(evt->m_x, evt->m_y), evt->m_state);
 #endif
     return true;
@@ -147,7 +150,8 @@ bool HPCCSystemsGraphViewControl::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWin
 
 bool HPCCSystemsGraphViewControl::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
 {
-#if defined(XP_UNIX)
+#if defined(XP_MACOSX)
+#elif defined(XP_UNIX)
     m_wnd->OnMouseMove(hpcc::PointD(evt->m_x, evt->m_y));
 #endif
     return true;
@@ -202,53 +206,12 @@ bool HPCCSystemsGraphViewControl::onWindows(FB::WindowsEvent *evt, FB::PluginWin
 	}
 	return false;
 }
+#elif defined(XP_MACOSX)
+#elif defined(XP_UNIX)
 #endif
-
-bool HPCCSystemsGraphViewControl::onX11(FB::X11Event *evt, FB::PluginWindow *)
-{
-	{
-	case GDK_EXPOSE:
-		{
-		    m_wnd->DoPaint(evt->m_event);
-			return true;
-		}
-		break;
-
-	case GDK_CONFIGURE:
-		{
-			GdkEventConfigure * event = reinterpret_cast<GdkEventConfigure *>(evt->m_event);
-			if (CDotView * win = GetWindow()->get_as<CDotView>())
-			{
-				area.y = event->y;
-				area.width = event->width;
-				area.height = event->height;
-		if (FB::JSAPIPtr root_api = getRootJSAPI())
-				//gtk_widget_set_size_request (win->m_canvas, 150, 100);
-			HPCCSystemsGraphViewControlAPI * api = static_cast<HPCCSystemsGraphViewControlAPI *>(root_api.get());
-			m_wnd->m_api = api;
-			api->m_callback = m_wnd;
-		}
-		break;
-	}
-	return false;
-}
-#endif
-
-bool HPCCSystemsGraphViewControl::onResized(FB::ResizedEvent *evt, FB::PluginWindow * win)
-{
-	//CRect rcClient;
-	FB::Rect rcClient = win->getWindowPosition();
-	//int debug = GetClientRect(FB::PluginCore::m_hWnd, rcClient);
-	ATLTRACE("rcClient.left:  %i\t", rcClient.left);
-	ATLTRACE("rcClient.top:  %i\t", rcClient.top);
-	ATLTRACE("rcClient.right:  %i\t", rcClient.right);
-	ATLTRACE("rcClient.bottom:  %i\n", rcClient.bottom);
-	m_wnd->ResizeClient(rcClient.right -rcClient.left, rcClient.bottom - rcClient.top);
-	//m_wnd->MoveWindow(rcClient.left, rcClient.top, rcClient.right -rcClient.left, rcClient.bottom - rcClient.top);
-	return false;
-}
 
 bool HPCCSystemsGraphViewControl::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow * pw)
+{
 #if defined (XP_WIN)
 	if (FB::PluginWindowWin * win = GetWindow()->get_as<FB::PluginWindowWin>())
 	{

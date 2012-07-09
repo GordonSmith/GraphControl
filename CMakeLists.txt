@@ -4,9 +4,14 @@ cmake_minimum_required (VERSION 2.6)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules" ${CMAKE_MODULE_PATH})
 
 include ( "${CMAKE_SOURCE_DIR}/version.cmake" )
-include ( "${CMAKE_MODULE_PATH}/tag.cmake" )
-include ( "${CMAKE_MODULE_PATH}/Utils.cmake" )
-include ( "${CMAKE_MODULE_PATH}/Externals.cmake" )
+include ( "${CMAKE_SOURCE_DIR}/cmake/Modules/tag.cmake" )
+include ( "${CMAKE_SOURCE_DIR}/cmake/Modules/Utils.cmake" )
+include ( "${CMAKE_SOURCE_DIR}/cmake/Modules/Externals.cmake" )
+
+if ( APPLE )
+	set(CMAKE_MODULE_PATH "${FIREBREATH_DIR}/cmake" ${CMAKE_MODULE_PATH})
+	include ( "${FIREBREATH_DIR}/cmake/configure_template.cmake" )
+endif ( APPLE )
 
 ##################################################################
 
@@ -49,7 +54,7 @@ message ( "-- Install Location is ${CMAKE_INSTALL_PREFIX}" )
 option(WITH_STATIC_RUNTIME "Build with static runtimes" OFF)
 
 if (WIN32)
-elseif(APPLE)
+#elseif(APPLE)
 elseif(UNIX)
 	option(WITH_BUILD_TARGET_IN_PLUGINS_FOLDER "Build directly into $HOME/.mozilla/plugins" OFF)
 	set(PLUGIN_DIRECTORY "lib/mozilla/plugins" CACHE STRING "Target Install for Firefox Plugin")

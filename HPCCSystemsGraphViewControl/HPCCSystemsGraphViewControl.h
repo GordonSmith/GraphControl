@@ -26,6 +26,7 @@
 #ifdef XP_WIN
 #include "PluginEvents/WindowsEvent.h"
 #elif defined(XP_MACOSX)
+#include "PluginEvents/MacEventCocoa.h"
 #elif defined(XP_UNIX)
 #include "PluginEvents/X11Event.h"
 #endif
@@ -67,9 +68,8 @@ public:
     virtual bool isWindowless() { return false; }
 
     BEGIN_PLUGIN_EVENT_MAP()
-		/*
         EVENTTYPE_CASE(FB::MouseDownEvent, onMouseDown, FB::PluginWindow)
-		EVENTTYPE_CASE(FB::MouseDoubleClickEvent, onMouseDoubleClick, FB::PluginWindow)
+        EVENTTYPE_CASE(FB::MouseDoubleClickEvent, onMouseDoubleClick, FB::PluginWindow)
         EVENTTYPE_CASE(FB::MouseUpEvent, onMouseUp, FB::PluginWindow)
         EVENTTYPE_CASE(FB::MouseMoveEvent, onMouseMove, FB::PluginWindow)
         EVENTTYPE_CASE(FB::MouseScrollEvent, onMouseScroll, FB::PluginWindow)
@@ -78,9 +78,6 @@ public:
 #ifdef XP_WIN
 		EVENTTYPE_CASE(FB::WindowsEvent, onWindows, FB::PluginWindow)
 #endif
-		*/
-		EVENTTYPE_CASE(FB::ResizedEvent, onResized, FB::PluginWindow)
-
         EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindow)
         EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindow)
     END_PLUGIN_EVENT_MAP()
@@ -100,8 +97,6 @@ public:
 #elif defined(XP_MACOSX)
 #elif defined(XP_UNIX)
 #endif
-
-	virtual bool onResized(FB::ResizedEvent *evt, FB::PluginWindow *);
 
 	virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
 	virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);

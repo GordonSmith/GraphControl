@@ -43,6 +43,9 @@ find_library(FIREBREATH_${basename_upper}_LIBRARY_RELWITHDEBINFO ${basename}
 
 set(FIREBREATH_${basename_upper}_LIBRARY optimized ${FIREBREATH_${basename_upper}_LIBRARY_RELWITHDEBINFO} debug ${FIREBREATH_${basename_upper}_LIBRARY_DEBUG})
 elseif(APPLE)
+find_library(FIREBREATH_${basename_upper}_LIBRARY ${basename}/lib${basename}.a
+             HINTS ${FIREBREATH_BUILD_DIR}
+	     )
 elseif(UNIX)
 find_library(FIREBREATH_${basename_upper}_LIBRARY ${basename}/lib${basename}.a
              HINTS ${FIREBREATH_BUILD_DIR}

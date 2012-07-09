@@ -41,6 +41,7 @@
 
 #ifdef WIN32
 #elif FB_MACOSX
+#include <Carbon/Carbon.h>
 #elif FB_X11
 #include <X11/Xlib.h>
 #include <gtk/gtk.h>
@@ -59,6 +60,7 @@ hpcc_interface GRAPHRENDER_API IGraphBuffer : public IUnknown
 #ifdef WIN32
 	virtual void Draw(HDC h_dc, const RECT* device_rect=0, const RECT* bmp_rect=0) const = 0;
 #elif FB_MACOSX
+    virtual void Draw(WindowRef window, int dest_x, int dest_y) const = 0;
 #elif FB_X11
     virtual void Draw(GtkWidget * widget, int dest_x, int dest_y) const = 0;
 #endif

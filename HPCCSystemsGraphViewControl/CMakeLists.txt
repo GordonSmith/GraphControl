@@ -132,7 +132,84 @@ endif()
 
 set(SOURCES ${SRCS} ${SRCS_WIN} ${SRCS_APPLE} ${SRCS_UNIX} ${SRCS_CMAKE})
 ADD_MSVC_PRECOMPILED_HEADER("precompiled_headers.h" "precompiled_headers.cpp" SOURCES)
-add_library(HPCCSystemsGraphViewControl SHARED ${SOURCES} ${SRCS_WIN_NO_PRECOMPILED_HEADERS})
+set(INSOURCES ${SOURCES} ${SRCS_WIN_NO_PRECOMPILED_HEADERS})
+
+# *********************************************************************
+
+if ( APPLE )
+	set(PLIST "Mac/bundle_template/Info.plist")
+	set(STRINGS "Mac/bundle_template/InfoPlist.strings")
+	set(LOCALIZED "Mac/bundle_template/Localized.r")
+
+    message ("Creating Mac Browser Plugin project ${PROJECT_NAME}")
+    if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/bundle)
+        file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bundle)
+        file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj)
+    endif()
+
+    configure_template(${PLIST} ${CMAKE_CURRENT_BINARY_DIR}/bundle/Info.plist)
+    configure_template(${STRINGS} ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/InfoPlist.strings)
+    configure_template(${LOCALIZED} ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.r)
+
+    #set(MAC_RESOURCE_FILES ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.r)
+
+    set(SOURCES
+        ${${INSOURCES}}
+        ${CMAKE_CURRENT_BINARY_DIR}/bundle/Info.plist
+        ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/InfoPlist.strings
+        ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.r
+        ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.rsrc
+    )
+
+    add_definitions(
+        -DXP_MACOSX=1
+        )
+
+    set (RCFILES ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.r)
+
+    foreach(ARCH ${CMAKE_OSX_ARCHITECTURES})
+        list(APPEND ARCHS -arch ${ARCH})
+    endforeach()
+
+    # Compile the resource file
+    find_program(RC_COMPILER Rez NO_DEFAULT_PATHS)
+    execute_process(COMMAND
+        ${RC_COMPILER} ${RCFILES} -useDF ${ARCHS} -arch x86_64 -o ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.rsrc
+        )
+
+    set_source_files_properties(
+        ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.rsrc
+        PROPERTIES GENERATED 1
+        )
+    message("Generating ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.rsrc")
+
+    add_library( ${PROJECT_NAME} MODULE
+        ${SOURCES} 
+        )
+
+    string(REPLACE " " "\ " FB_ESC_ROOT_DIR ${FIREBREATH_SOURCE_DIR})
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        BUNDLE 1
+        BUNDLE_EXTENSION plugin
+        XCODE_ATTRIBUTE_WRAPPER_EXTENSION plugin  #sets the extension to .plugin
+        XCODE_ATTRIBUTE_MACH_O_TYPE mh_bundle
+        XCODE_ATTRIBUTE_INFOPLIST_FILE ${CMAKE_CURRENT_BINARY_DIR}/bundle/Info.plist
+        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/bundle/Info.plist
+        LINK_FLAGS "-Wl,-exported_symbols_list,${FB_ESC_ROOT_DIR}/gen_templates/ExportList_plugin.txt")
+
+    set_source_files_properties(
+        ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/InfoPlist.strings
+        ${CMAKE_CURRENT_BINARY_DIR}/bundle/English.lproj/Localized.rsrc
+        PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/English.lproj")
+
+    #set_source_files_properties(
+    #    ${EXECUTABLE_OUTPUT_PATH}/libgraphdb.dylib
+    #    ${EXECUTABLE_OUTPUT_PATH}/Debug/libgraphlayout.dylib
+    #    ${EXECUTABLE_OUTPUT_PATH}/Debug/libgraphrender.dylib
+    #    PROPERTIES MACOSX_PACKAGE_LOCATION "MacOS")
+else ( APPLE )
+	add_library(HPCCSystemsGraphViewControl SHARED ${SOURCES} ${SRCS_WIN_NO_PRECOMPILED_HEADERS})
+endif ( APPLE )
 
 # *********************************************************************
 
@@ -161,12 +238,16 @@ target_link_libraries( HPCCSystemsGraphViewControl
 	PluginAuto
 	${Boost_LIBRARIES}
 	)
-
 if(WIN32)
 	target_link_libraries( HPCCSystemsGraphViewControl
 		wininet
 		)
 elseif(APPLE)
+	target_link_libraries( HPCCSystemsGraphViewControl
+		${FOUNDATION_FRAMEWORK}
+		${CORE_SERVICES}
+		${SYS_CONFIG}
+	)
 elseif(UNIX)
     set(LIBDL_LIBRARIES dl)
 	target_link_libraries( HPCCSystemsGraphViewControl
@@ -177,8 +258,34 @@ elseif(UNIX)
 endif()
 
 # *********************************************************************
+SET(plugin_dest_dir bin)
+SET(qtconf_dest_dir bin)
+SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/npHPCCSystemsGraphViewControl.so")
+IF(APPLE)
+  SET(plugin_dest_dir npHPCCSystemsGraphViewControl.plugin/Contents/MacOS)
+  SET(qtconf_dest_dir npHPCCSystemsGraphViewControl.plugin/Contents/Resources)
+  SET(APPS "\${CMAKE_INSTALL_PREFIX}/npHPCCSystemsGraphViewControl.plugin")
+ENDIF(APPLE)
+IF(WIN32)
+  SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/npHPCCSystemsGraphViewControl.dll")
+ENDIF(WIN32)
+
+# *********************************************************************
 
 INSTALL(TARGETS HPCCSystemsGraphViewControl 
+	BUNDLE DESTINATION . 
 	RUNTIME DESTINATION bin 
 	LIBRARY DESTINATION lib
 )
+
+# *********************************************************************
+SET(DIRS "/opt/local/lib")
+
+#INSTALL(CODE "
+    #file(GLOB_RECURSE QTPLUGINS \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+ #   include(BundleUtilities)
+  #  message(\"QTPLUGINS:  ${QTPLUGINS}\")
+    #fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
+   # " COMPONENT Runtime)
+
+# *********************************************************************

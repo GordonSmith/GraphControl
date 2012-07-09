@@ -68,6 +68,10 @@ elseif(APPLE)
     find_library(APPLICATIONSERVICES_FRAMEWORK ApplicationServices)
     find_library(QUARTZCORE_FRAMEWORK QuartzCore)
 
+    find_library(CORE_SERVICES CoreServices)
+    find_library(SYS_CONFIG SystemConfiguration)
+    message("Found: ${CORE_SERVICES} ${SYS_CONFIG}")
+
 #    FIND_PACKAGE(X11)
 #    IF(X11_FOUND)  
 #        INCLUDE_DIRECTORIES(${X11_INCLUDE_DIRS})
