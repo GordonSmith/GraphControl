@@ -165,6 +165,8 @@ typedef PointT<double> PointD;
 typedef std::vector<PointD> PointDVector;
 PointD CreatePointD(const std::string & x, const std::string & y, const PointD & offset, int dpi = 96);
 
+typedef PointT<int> PointI;
+
 template<typename T>
 class RectT 
 {

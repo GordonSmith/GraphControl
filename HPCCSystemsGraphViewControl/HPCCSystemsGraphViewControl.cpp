@@ -25,15 +25,20 @@
 #include "HPCCSystemsGraphViewControl.h"
 #if defined FB_WIN
 #include "PluginWindowWin.h"
+#include "PluginWindowlessWin.h"
 #elif defined FB_X11
 #include "PluginWindowX11.h"
+#include "PluginWindowlessX11.h"
 #elif defined FB_MACOSX
 #include "PluginWindowMac.h"
+#include "PluginWindowlessMac.h"
 #endif
 
 #include <XgmmlParser.h>
 #include <DotParser.h>
 #include <boost/algorithm/string.hpp>
+
+#include <DOM/Element.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn HPCCSystemsGraphViewControl::StaticInitialize()
@@ -232,7 +237,7 @@ hpcc::PointD HPCCSystemsGraphViewControl::GetCenterAsWorldPoint()
 	GetClientRectangle(rc);
 	hpcc::PointD point;
 	rc.GetCenter(&point);
-	point.x += GetScrollOffsetX();
+	point.x += GetScrollOffsetX();	
 	point.y += GetScrollOffsetY();
 
 	hpcc::PointD worldDblClk(point.x, point.y);
@@ -511,7 +516,7 @@ bool HPCCSystemsGraphViewControl::onMouseDown(FB::MouseDownEvent *evt, FB::Plugi
 
 bool HPCCSystemsGraphViewControl::onMouseDoubleClick(FB::MouseDoubleClickEvent *evt, FB::PluginWindow *)
 {
-	hpcc::PointD point(evt->m_x, evt->m_y);
+	hpcc::PointI point(evt->m_x, evt->m_y);
 	m_mouseDown = MOUSEDOWN_DBLCLK;
 	point.Offset(m_ptOffset);
 	hpcc::PointD worldDblClk(point.x, point.y);
@@ -524,7 +529,7 @@ bool HPCCSystemsGraphViewControl::onMouseDoubleClick(FB::MouseDoubleClickEvent *
 
 bool HPCCSystemsGraphViewControl::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWindow *)
 {
-	hpcc::PointD point(evt->m_x, evt->m_y);
+	hpcc::PointI point(evt->m_x, evt->m_y);
 	switch (m_mouseDown)
 	{
 	case MOUSEDOWN_DBLCLK:
@@ -569,7 +574,20 @@ bool HPCCSystemsGraphViewControl::onMouseUp(FB::MouseUpEvent *evt, FB::PluginWin
 
 bool HPCCSystemsGraphViewControl::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
 {
-	hpcc::PointD point(evt->m_x, evt->m_y);
+	FB::Rect pos;
+	if (isWindowless())
+	{
+#if defined FB_WIN
+		pos = ((FB::PluginWindowlessWin*)GetWindow())->getWindowPosition();
+#endif
+	}
+	else
+	{
+#if defined FB_WIN
+		pos = ((FB::PluginWindowWin*)GetWindow())->getWindowPosition();
+#endif
+	}
+	hpcc::PointI point(evt->m_x, evt->m_y);
 	switch (m_mouseDown)
 	{
 	case MOUSEDOWN_NORMAL:
@@ -605,12 +623,11 @@ bool HPCCSystemsGraphViewControl::onMouseMove(FB::MouseMoveEvent *evt, FB::Plugi
 
 bool HPCCSystemsGraphViewControl::onMouseScroll(FB::MouseScrollEvent *evt, FB::PluginWindow *)
 {
-    printf("onMouseScroll: %d\n", evt->m_state);
-	hpcc::PointD pt(evt->m_x, evt->m_y);
-	hpcc::PointD delta(evt->m_dx, evt->m_dy);
+	hpcc::PointI pt(evt->m_x, evt->m_y);
+	hpcc::PointI delta(evt->m_dx, evt->m_dy);
 	if (evt->m_state & FB::MouseButtonEvent::ModifierState_Control)
 	{
-		hpcc::PointD point = pt;
+		hpcc::PointI point = pt;
 		point.Offset(m_ptOffset);
 		hpcc::PointD worldDblClk(point.x, point.y);
 		worldDblClk = m_gr->ScreenToWorld(worldDblClk);
@@ -626,13 +643,13 @@ bool HPCCSystemsGraphViewControl::onMouseScroll(FB::MouseScrollEvent *evt, FB::P
 
 		boost::static_pointer_cast<HPCCSystemsGraphViewControlAPI>(getRootJSAPI())->fire_Scaled((int)(m_gr->GetScale() * 100));
 	} else {
-		hpcc::PointD point = pt;
+		hpcc::PointI point = pt;
 		point.Offset(m_ptOffset);
 		hpcc::PointD worldDblClk(point.x, point.y);
 		worldDblClk = m_gr->ScreenToWorld(worldDblClk);
 
-		pt.x -= delta.x;
-		pt.y -= delta.y;
+		pt.x += delta.x;
+		pt.y += delta.y;
 
 		MoveTo(worldDblClk, pt.x, pt.y);
 	}
@@ -673,13 +690,27 @@ bool HPCCSystemsGraphViewControl::onRefresh(FB::RefreshEvent *evt, FB::PluginWin
 	m_buffer->Resize(rect.Width(), rect.Height());
 	m_gr->DoRender(rect, true);
 
+	if (isWindowless())
+	{
 #if defined FB_WIN
-	m_buffer->Draw(((FB::PluginWindowWin*)GetWindow())->getHWND(), bounds.left, bounds.top);
+		m_buffer->Draw(((FB::PluginWindowlessWin*)GetWindow())->getHDC(), bounds.left, bounds.top);
 #elif defined FB_MACOSX
-	m_buffer->Draw(((FB::CoreGraphicsDraw *)evt)->context, bounds.left, bounds.top);
+		m_buffer->Draw(((FB::CoreGraphicsDraw *)evt)->context, bounds.left, bounds.top);
 #elif defined FB_X11
-	m_buffer->Draw(((FB::PluginWindowX11*)GetWindow())->getWidget(), bounds.left, bounds.top);
+		m_buffer->Draw(((FB::PluginWindowX11*)GetWindow())->getWidget(), bounds.left, bounds.top);
 #endif
+	}
+	else
+	{
+#if defined FB_WIN
+		((FB::PluginWindowWin*)GetWindow())->setSuppressEraseBackground(true);
+		m_buffer->Draw(((FB::PluginWindowWin*)GetWindow())->getHWND(), bounds.left, bounds.top);
+#elif defined FB_MACOSX
+		m_buffer->Draw(((FB::CoreGraphicsDraw *)evt)->context, bounds.left, bounds.top);
+#elif defined FB_X11
+		m_buffer->Draw(((FB::PluginWindowX11*)GetWindow())->getWidget(), bounds.left, bounds.top);
+#endif
+	}
 
 	return true;
 }

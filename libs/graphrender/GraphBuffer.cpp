@@ -81,11 +81,15 @@ public:
 	}
 
 #ifdef WIN32
+    void Draw(HDC dc, int dest_x, int dest_y) const
+	{
+		m_pixelmap.draw(dc, 0, 0);
+	}
     void Draw(HWND hwnd, int dest_x, int dest_y) const
 	{	
 		PAINTSTRUCT psPaint;
 		HDC dc = BeginPaint(hwnd, &psPaint);
-		m_pixelmap.draw(dc, 0, 0);
+		Draw(dc, dest_x, dest_y);
 		EndPaint(hwnd, &psPaint);
 	}
 #elif FB_MACOSX

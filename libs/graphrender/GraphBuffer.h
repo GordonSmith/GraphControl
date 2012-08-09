@@ -61,6 +61,7 @@ hpcc_interface GRAPHRENDER_API IGraphBuffer : public IUnknown
     virtual unsigned char* GetBuffer() = 0;
 
 #ifdef WIN32
+    virtual void Draw(HDC dc, int dest_x, int dest_y) const = 0;
     virtual void Draw(HWND hwnd, int dest_x, int dest_y) const = 0;
 #elif FB_MACOSX
     virtual void Draw(CGContextRef context, int dest_x, int dest_y) const = 0;

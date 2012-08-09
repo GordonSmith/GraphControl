@@ -18,6 +18,12 @@ add_definitions(
     /D "_ATL_STATIC_REGISTRY"
 )
 
+if ( NOT WITH_DYNAMIC_MSVC_RUNTIME )
+add_definitions(
+    /D "STATIC_LIB"
+)
+endif ( NOT WITH_DYNAMIC_MSVC_RUNTIME )
+
 SOURCE_GROUP(Win FILES ${PLATFORM})
 
 set (SOURCES

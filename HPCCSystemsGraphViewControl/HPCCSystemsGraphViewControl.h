@@ -66,9 +66,8 @@ protected:
 	std::string m_dot;
 	std::string m_svg;
 
-	hpcc::PointD m_ptOffset;
-	hpcc::PointD m_ptSize;
-
+	hpcc::PointI m_ptOffset;
+	hpcc::PointI m_ptSize;
 
 public:
     static void StaticInitialize();
@@ -133,7 +132,7 @@ public:
     // If you want your plugin to be optionally windowless based on the
     // value of the "windowless" param tag, remove this method or return
     // FB::PluginCore::isWindowless()
-    virtual bool isWindowless() { return false; }
+    virtual bool isWindowless() { return FB::PluginCore::isWindowless(); }
 
     BEGIN_PLUGIN_EVENT_MAP()
         EVENTTYPE_CASE(FB::MouseDownEvent, onMouseDown, FB::PluginWindow)
