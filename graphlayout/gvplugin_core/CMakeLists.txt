@@ -56,7 +56,6 @@ add_library ( gvplugin_core STATIC
 target_link_libraries ( gvplugin_core
 						common
 						graph
-						xdot
 	)
 
 

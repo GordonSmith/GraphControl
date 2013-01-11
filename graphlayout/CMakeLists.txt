@@ -42,6 +42,8 @@ set (	SRCS
 	libagraph.cpp
 	libagraph.h
 	libagraphsp.h
+
+	config.h
 	)
 
 # *********************************************************************

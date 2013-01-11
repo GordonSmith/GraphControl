@@ -17,13 +17,16 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtlist.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtmethod.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtopen.c
-	${GRAPHVIZSRC_DIRS}/lib/cdt/dtrenew.c
+	#${GRAPHVIZSRC_DIRS}/lib/cdt/dtrenew.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtrestore.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtsize.c
-	${GRAPHVIZSRC_DIRS}/lib/cdt/dtstat.c
+	#${GRAPHVIZSRC_DIRS}/lib/cdt/dtstat.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtstrhash.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtview.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtwalk.c
+
+	###  2.28.0
+	#${GRAPHVIZSRC_DIRS}/lib/cdt/dttreeset
 
 	${GRAPHVIZSRC_DIRS}/lib/cdt/cdt.def
 	)

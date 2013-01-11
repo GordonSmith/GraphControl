@@ -21,8 +21,10 @@
  ******************************************************************************/
 #include "precompiled_headers.h"
 
-#include <neato.h>
 #include <gvc.h>
+#include <gvcjob.h>
+#include <gvcint.h>
+#include <globals.h>
 
 #if WITH_CGRAPH
 #include <cgraph.h> // needed to cure VS7 linker error
@@ -63,15 +65,18 @@ size_t MyWriteFunction(GVJ_t *job, const char *s, size_t len)
 	return len;
 }
 
-static GVC_t *gvc;
 bool DoLayout(const char * layout, const char* mem, const char* format, const char* scale, std::string & result)
 {
 	bool retVal = true;
 	int  argc = 0;
 	char* argv [32];
 
-    gvc = gvContextPlugins(lt_preloaded_symbols, FALSE);
-	if (gvc) 
+    GVC_t *gvc = gvContext();
+    gvAddLibrary(gvc, &gvplugin_core_LTX_library);
+    gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
+    gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
+
+	if (gvc)
 	{
 		std::string arg_layout = layout;
 		std::string arg_format = "-T";
@@ -98,7 +103,7 @@ bool DoLayout(const char * layout, const char* mem, const char* format, const ch
 		{
 #ifdef _DEBUG
 			std::cerr << std::string("Start - Layout Engine.") << std::endl;
-			gvLayout(gvc, g, const_cast<char *>(layout)); 
+			gvLayout(gvc, g, const_cast<char *>(layout));
 			gvc->write_fn = &MyWriteFunction;
 			gvRenderJobs(gvc, g);
 			result = g_result[gvc];
@@ -209,7 +214,7 @@ bool DoParse(const char* mem, IGraphvizVisitor * visitor)
 	bool retVal = true;
 	int  argc = 0;
 
-    gvc = gvContextPlugins(lt_preloaded_symbols, FALSE);
+    GVC_t * gvc = gvContextPlugins(lt_preloaded_symbols, FALSE);
 	if (gvc) 
 	{
 		graph_t *g = agmemread(const_cast<char *>(mem));
@@ -245,4 +250,3 @@ int shortest_route(Ppoly_t **polys, int num_polys, Ppoint_t * src, Ppoint_t * ds
 	}
 	return 0;
 }
-

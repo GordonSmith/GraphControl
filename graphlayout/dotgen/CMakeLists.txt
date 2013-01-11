@@ -52,8 +52,6 @@ add_library ( dotgen STATIC
 target_link_libraries ( dotgen
 						common
 						graph
-						xdot
-						neatogen
 	)
 
 

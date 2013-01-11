@@ -8,3 +8,7 @@
 #undef HAVE_EXPAT_H
 #undef HAVE_LIBZ
 #undef HAVE_GTS
+#undef ORTHO
+#if WIN32
+#define HAVE_STRCASECMP 1
+#endif

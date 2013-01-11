@@ -23,7 +23,6 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/common/memory.c
 	${GRAPHVIZSRC_DIRS}/lib/common/ns.c
 	${GRAPHVIZSRC_DIRS}/lib/common/output.c
-	${GRAPHVIZSRC_DIRS}/lib/common/pointset.c
 	${GRAPHVIZSRC_DIRS}/lib/common/postproc.c
 	${GRAPHVIZSRC_DIRS}/lib/common/psusershape.c
 	${GRAPHVIZSRC_DIRS}/lib/common/routespl.c
@@ -31,6 +30,10 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/common/splines.c
 	${GRAPHVIZSRC_DIRS}/lib/common/timing.c
 	${GRAPHVIZSRC_DIRS}/lib/common/utils.c
+
+	###  graphviz 2.26.3
+	${GRAPHVIZSRC_DIRS}/lib/common/pointset.c
+
 	)
 	
 if ( WIN32 )	
