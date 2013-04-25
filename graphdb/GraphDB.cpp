@@ -205,6 +205,8 @@ const char * WriteDOT(const IGraph * graph, std::string & dot)
 	WalkEdges(graph, content);
 
 	std::string layout = graph->GetPropertyString(PROP_LAYOUT);
+	std::string splines = graph->GetPropertyString(PROP_SPLINES);
+
 	std::string props;
 	if (boost::algorithm::equals(layout, "neato"))
 		props += (boost::format(PropTpl) % "overlap" % "scale").str();
@@ -212,6 +214,8 @@ const char * WriteDOT(const IGraph * graph, std::string & dot)
 		props += (boost::format(PropTpl) % "overlap" % "scale").str();
 	else if (boost::algorithm::equals(layout, "circo"))
 		props += (boost::format(PropTpl) % "overlap" % "compress").str();
+	if (!splines.empty())
+		props += (boost::format(PropTpl) % "splines" % splines).str();
 
 	if (graph->GetPropertyCUnknown(DOT_PROP_CDOTITEM))  
 	{

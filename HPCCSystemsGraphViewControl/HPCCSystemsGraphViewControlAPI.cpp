@@ -114,9 +114,9 @@ bool HPCCSystemsGraphViewControlAPI::loadDOT(const std::string& dot)
 	return true;
 }
 
-bool HPCCSystemsGraphViewControlAPI::startLayout(const std::string& layout)
+bool HPCCSystemsGraphViewControlAPI::startLayout(const std::string& layout, boost::optional<std::string> splines)
 {
-	getPlugin()->StartLayout(layout);
+	getPlugin()->StartLayout(layout, splines ? *splines : "");
 	return true;
 }
 

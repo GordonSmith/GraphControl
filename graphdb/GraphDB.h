@@ -69,6 +69,7 @@ enum PROP
 {
 	PROP_UNKNOWN = 0,
 	PROP_LAYOUT,
+	PROP_SPLINES,
 	PROP_LAST
 };
 //  External ID  ==============================================================
