@@ -12,6 +12,7 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/common/arrows.c
 	${GRAPHVIZSRC_DIRS}/lib/common/colxlate.c
 	${GRAPHVIZSRC_DIRS}/lib/common/emit.c
+	${GRAPHVIZSRC_DIRS}/lib/common/ellipse.c
 	${GRAPHVIZSRC_DIRS}/lib/common/fontmetrics.c
 	${GRAPHVIZSRC_DIRS}/lib/common/geom.c
 	${GRAPHVIZSRC_DIRS}/lib/common/globals.c
@@ -19,6 +20,8 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/common/htmlparse.c
 	${GRAPHVIZSRC_DIRS}/lib/common/htmltable.c
 	${GRAPHVIZSRC_DIRS}/lib/common/input.c
+	${GRAPHVIZSRC_DIRS}/lib/common/intset.c
+	${GRAPHVIZSRC_DIRS}/lib/common/intset.h
 	${GRAPHVIZSRC_DIRS}/lib/common/labels.c
 	${GRAPHVIZSRC_DIRS}/lib/common/memory.c
 	${GRAPHVIZSRC_DIRS}/lib/common/ns.c
@@ -29,6 +32,7 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/common/routespl.c
 	${GRAPHVIZSRC_DIRS}/lib/common/shapes.c
 	${GRAPHVIZSRC_DIRS}/lib/common/splines.c
+	${GRAPHVIZSRC_DIRS}/lib/common/taper.c
 	${GRAPHVIZSRC_DIRS}/lib/common/timing.c
 	${GRAPHVIZSRC_DIRS}/lib/common/utils.c
 	)
@@ -48,11 +52,11 @@ include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/fdpgen
 	${GRAPHVIZSRC_DIRS}/lib/pathplan
 	${GRAPHVIZSRC_DIRS}/lib/gd
-	${GRAPHVIZSRC_DIRS}/lib/graph
+	${GRAPHVIZSRC_DIRS}/lib/cgraph
 	${GRAPHVIZSRC_DIRS}/lib/gvc
 	${GRAPHVIZSRC_DIRS}/lib/xdot
-	${GRAPHVIZSRC_DIRS}
-	..
+	${GRAPHVIZSRC_DIRS}/lib/label
+	${GRAPHVIZSRC_DIRS}/libltdl
 	)
 
 if (WIN32)
@@ -67,7 +71,8 @@ add_library ( common STATIC
 			)
 target_link_libraries ( common
 						gvc
-						graph
+						cgraph
+						label
 						pathplan
 	)
 

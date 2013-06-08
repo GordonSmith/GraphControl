@@ -20,11 +20,9 @@ include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/gvc
 	${GRAPHVIZSRC_DIRS}/lib/gd
 	${GRAPHVIZSRC_DIRS}/lib/cdt
-	${GRAPHVIZSRC_DIRS}/lib/graph
+	${GRAPHVIZSRC_DIRS}/lib/cgraph
 	${GRAPHVIZSRC_DIRS}/lib/pathplan
 	${GRAPHVIZSRC_DIRS}/lib/sparse
-	${GRAPHVIZSRC_DIRS}
-	..
 	)
 
 if (WIN32)

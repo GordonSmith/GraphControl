@@ -22,6 +22,7 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtsize.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtstat.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtstrhash.c
+	${GRAPHVIZSRC_DIRS}/lib/cdt/dttreeset.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtview.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtwalk.c
 
@@ -30,8 +31,6 @@ set (	SRCS
 
 include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/cdt
-	${GRAPHVIZSRC_DIRS}
-	..
 	)
 
 if (WIN32)

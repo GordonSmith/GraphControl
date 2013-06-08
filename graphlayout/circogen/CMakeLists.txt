@@ -30,11 +30,9 @@ include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/pack
 	${GRAPHVIZSRC_DIRS}/lib/gd
 	${GRAPHVIZSRC_DIRS}/lib/cdt
-	${GRAPHVIZSRC_DIRS}/lib/graph
+	${GRAPHVIZSRC_DIRS}/lib/cgraph
 	${GRAPHVIZSRC_DIRS}/lib/pathplan
 	${GRAPHVIZSRC_DIRS}/lib/sparse
-	${GRAPHVIZSRC_DIRS}
-	..
 	)
 
 if (WIN32)
@@ -48,7 +46,7 @@ add_library ( circogen STATIC
 			)
 target_link_libraries ( circogen
 						common
-						graph
+						cgraph
 						neatogen
 						pack
 	)

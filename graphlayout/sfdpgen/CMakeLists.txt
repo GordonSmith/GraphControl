@@ -26,6 +26,10 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/sparse_solve.h
 	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/spring_electrical.c
 	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/spring_electrical.h
+	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/stress_model.c
+	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/stress_model.h
+	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/uniform_stress.c
+	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/uniform_stress.h
 	)
 
 include_directories (
@@ -35,14 +39,12 @@ include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/neatogen
 	${GRAPHVIZSRC_DIRS}/lib/gd
 	${GRAPHVIZSRC_DIRS}/lib/cdt
-	${GRAPHVIZSRC_DIRS}/lib/graph
+	${GRAPHVIZSRC_DIRS}/lib/cgraph
 	${GRAPHVIZSRC_DIRS}/lib/pathplan
 	${GRAPHVIZSRC_DIRS}/lib/pack
 	${GRAPHVIZSRC_DIRS}/lib/gvc
 	${GRAPHVIZSRC_DIRS}/lib/sparse
 	${GRAPHVIZSRC_DIRS}/lib/ingraphs
-	${GRAPHVIZSRC_DIRS}
-	..
 	)
 
 if (WIN32)
@@ -56,7 +58,7 @@ add_library ( sfdpgen STATIC
 			)
 target_link_libraries ( sfdpgen
 						common
-						graph
+						cgraph
 						neatogen
 						pack
 	)

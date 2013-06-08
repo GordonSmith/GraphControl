@@ -12,11 +12,11 @@ set ( GRAPHLAYOUTSRC_DIRS ${CMAKE_CURRENT_SOURCE_DIR} )
 # *********************************************************************
 
 include_directories (
-	${GRAPHVIZSRC_DIRS}/lib/graph
+#	${GRAPHVIZSRC_DIRS}/lib/graph
 	${GRAPHVIZSRC_DIRS}/lib/pathplan
 	${GRAPHVIZSRC_DIRS}/lib/common
 #	${GRAPHVIZSRC_DIRS}/lib/agraph
-#	${GRAPHVIZSRC_DIRS}/lib/cgraph
+	${GRAPHVIZSRC_DIRS}/lib/cgraph
 	${GRAPHVIZSRC_DIRS}/lib/gvc
 	${GRAPHVIZSRC_DIRS}/lib/dotgen
 	${GRAPHVIZSRC_DIRS}/lib/neatogen
@@ -29,7 +29,7 @@ include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/xdot
 	${GRAPHVIZSRC_DIRS}/lib/gd
 	${GRAPHLAYOUTSRC_DIRS}
-	${GRAPHVIZSRC_DIRS}
+#	${GRAPHVIZSRC_DIRS}
 	${Boost_INCLUDE_DIRS}
 	)
 
@@ -67,8 +67,8 @@ add_subdirectory (gvc)
 set_property(TARGET gvc PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (cdt)
 set_property(TARGET cdt PROPERTY FOLDER "3rdParty/Graphviz")
-#add_subdirectory (cgraph)
-#set_property(TARGET cgraph PROPERTY FOLDER "3rdParty/Graphviz")
+add_subdirectory (cgraph)
+set_property(TARGET cgraph PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (circogen)
 set_property(TARGET circogen PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (common)
@@ -79,18 +79,22 @@ add_subdirectory (fdpgen)
 set_property(TARGET fdpgen PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (sfdpgen)
 set_property(TARGET sfdpgen PROPERTY FOLDER "3rdParty/Graphviz")
-add_subdirectory (graph)
-set_property(TARGET graph PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (gvplugin_core)
 set_property(TARGET gvplugin_core PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (gvplugin_dot_layout)
 set_property(TARGET gvplugin_dot_layout PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (gvplugin_neato_layout)
 set_property(TARGET gvplugin_neato_layout PROPERTY FOLDER "3rdParty/Graphviz")
+add_subdirectory (ingraphs)
+set_property(TARGET ingraphs PROPERTY FOLDER "3rdParty/Graphviz")
+add_subdirectory (label)
+set_property(TARGET label PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (neatogen)
 set_property(TARGET neatogen PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (osage)
 set_property(TARGET osage PROPERTY FOLDER "3rdParty/Graphviz")
+add_subdirectory (ortho)
+set_property(TARGET gvortho PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (pack)
 set_property(TARGET pack PROPERTY FOLDER "3rdParty/Graphviz")
 add_subdirectory (patchwork)
@@ -108,19 +112,21 @@ set_property(TARGET vpsc PROPERTY FOLDER "3rdParty/Graphviz")
 
 target_link_libraries ( graphlayout
 	cdt
-#	cgraph
+	cgraph
 	circogen
 	common
 	dotgen
 	fdpgen
 	sfdpgen
-	graph
 	gvc
 	gvplugin_core
 	gvplugin_dot_layout
 	gvplugin_neato_layout
+	ingraphs
+	label
 	neatogen
 	osage
+	gvortho
 	pack
 	patchwork
 	pathplan

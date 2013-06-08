@@ -8,14 +8,15 @@
 project( sparse )
 
 set (	SRCS
+	${GRAPHVIZSRC_DIRS}/lib/sparse/BinaryHeap.c
+	${GRAPHVIZSRC_DIRS}/lib/sparse/general.c
+	${GRAPHVIZSRC_DIRS}/lib/sparse/IntStack.c
 	${GRAPHVIZSRC_DIRS}/lib/sparse/SparseMatrix.c
 	)
 
 include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/sparse
 	${GRAPHVIZSRC_DIRS}/lib/common
-	${GRAPHVIZSRC_DIRS}
-	..
 	)
 
 if (WIN32)

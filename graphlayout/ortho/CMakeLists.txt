@@ -1,10 +1,10 @@
 project( gvortho )
 
 set (	SRCS
-	#${GRAPHVIZSRC_DIRS}/lib/ortho/fPQ.c
-	#${GRAPHVIZSRC_DIRS}/lib/ortho/fPQ.h
-	${GRAPHVIZSRC_DIRS}/lib/ortho/intset.c
-	${GRAPHVIZSRC_DIRS}/lib/ortho/intset.h
+	${GRAPHVIZSRC_DIRS}/lib/ortho/fPQ.c
+	${GRAPHVIZSRC_DIRS}/lib/ortho/fPQ.h
+	#${GRAPHVIZSRC_DIRS}/lib/ortho/intset.c
+	#${GRAPHVIZSRC_DIRS}/lib/ortho/intset.h
 	${GRAPHVIZSRC_DIRS}/lib/ortho/maze.c
 	${GRAPHVIZSRC_DIRS}/lib/ortho/maze.h
 	${GRAPHVIZSRC_DIRS}/lib/ortho/ortho.c
@@ -16,13 +16,12 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/ortho/sgraph.c
 	${GRAPHVIZSRC_DIRS}/lib/ortho/sgraph.h
 	${GRAPHVIZSRC_DIRS}/lib/ortho/structures.h
-	${GRAPHVIZSRC_DIRS}/lib/ortho/trap.h
 	${GRAPHVIZSRC_DIRS}/lib/ortho/trapezoid.c
+	${GRAPHVIZSRC_DIRS}/lib/ortho/trap.h
 	)
 
 include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/ortho
-	${GRAPHVIZSRC_DIRS}
 	)
 
 if (WIN32)

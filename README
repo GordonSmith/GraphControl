@@ -40,9 +40,9 @@ cd ..
 
 #### Get AT&T Graphviz libraries #### 
 wget http://www.graphviz.org/pub/graphviz/stable/SOURCES/graphviz-2.26.3.tar.gz
-tar xf graphviz-2.26.3.tar.gz
-rm graphviz-2.26.3.tar.gz
-cd graphviz-2.26.3
+tar xf graphviz-2.30.1.tar.gz
+rm graphviz-2.30.1.tar.gz
+cd graphviz-2.30.1
 ./configure
 cd ..
 
@@ -56,9 +56,9 @@ cd GraphControl
 
 #### Generate GraphControl make files #### 
 # On OSX and Linux
-cmake -DCMAKE_BUILD_TYPE=Release -DWITH_SYSTEM_BOOST=1 -DFB_PROJECTS_DIR:PATH=../GraphControl -DGRAPHVIZSRC_DIR=../../graphviz-2.26.3 -DAGGSRC_DIR=../../agg ../../FireBreath
+cmake -DCMAKE_BUILD_TYPE=Release -DWITH_SYSTEM_BOOST=1 -DFB_PROJECTS_DIR:PATH=../GraphControl -DGRAPHVIZSRC_DIR=../../graphviz-2.30.1 -DAGGSRC_DIR=../../agg ../../FireBreath
 # On Windows
-cmake -DCMAKE_BUILD_TYPE=Release -DWITH_SYSTEM_BOOST=1 -DFB_PROJECTS_DIR:PATH=../GraphControl -DGRAPHVIZSRC_DIR=../../graphviz-2.26.3 -DAGGSRC_DIR=../../agg -DEXTERNALS_DIRECTORY:PATH=c:/full/path/to/externals ../../FireBreath
+cmake -DCMAKE_BUILD_TYPE=Release -DWITH_SYSTEM_BOOST=1 -DFB_PROJECTS_DIR:PATH=../GraphControl -DGRAPHVIZSRC_DIR=../../graphviz-2.30.1 -DAGGSRC_DIR=../../agg -DEXTERNALS_DIRECTORY:PATH=c:/full/path/to/externals ../../FireBreath
 
 #### Compile the sources #### 
 cmake --build . --config Release

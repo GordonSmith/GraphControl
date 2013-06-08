@@ -209,7 +209,13 @@ public:
 
 		if (e->m_tag.compare("node") == 0)
 		{
-			//  If top is NULL at this point it must be a subgraph.
+            if (m_giStack.empty())
+            {
+		        m_graph->SetExternalID(GRAPH_TYPE_GRAPH, constGet(e->m_attr, "id"), m_graph);
+		        m_graph->SetProperty(DOT_ID, constGet(e->m_attr, "id").c_str());
+            }
+
+            //  If top is NULL at this point it must be a subgraph.
 			EnsureTopIsACluster();
 			m_giStack.push_front(constGet(e->m_attr, "id"));
 		}

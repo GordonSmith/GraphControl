@@ -10,14 +10,17 @@ project( gvplugin_core )
 set (	SRCS
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvloadimage_core.c
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvplugin_core.c
-	${GRAPHVIZSRC_DIRS}/plugin/core/gvplugin_core.def
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_dot.c
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_fig.c
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_map.c
+	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_pic.c
+	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_pov.c
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_ps.c
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_svg.c
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_tk.c
 	${GRAPHVIZSRC_DIRS}/plugin/core/gvrender_core_vml.c
+
+	${GRAPHVIZSRC_DIRS}/plugin/core/gvplugin_core.def
 	)
 
 include_directories (
@@ -25,7 +28,7 @@ include_directories (
 	#${GRAPHVIZSRC_DIRS}/plugin/libltdl
 	#${GRAPHVIZSRC_DIRS}/lib/agutil
 	#${GRAPHVIZSRC_DIRS}/windows/lib/cdt
-	${GRAPHVIZSRC_DIRS}/lib/graph
+	${GRAPHVIZSRC_DIRS}/lib/cgraph
 	${GRAPHVIZSRC_DIRS}/lib/vpsc
 	${GRAPHVIZSRC_DIRS}/lib/vmalloc
 	${GRAPHVIZSRC_DIRS}/lib/twopigen
@@ -38,8 +41,6 @@ include_directories (
 	${GRAPHVIZSRC_DIRS}/lib/gvc
 	${GRAPHVIZSRC_DIRS}/lib/cdt
 	${GRAPHVIZSRC_DIRS}/lib/cgraph
-	${GRAPHVIZSRC_DIRS}
-	..
 	)
 
 #ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE -DMSWIN32 -DNONDLL)
@@ -55,7 +56,7 @@ add_library ( gvplugin_core STATIC
 			)
 target_link_libraries ( gvplugin_core
 						common
-						graph
+						cgraph
 						xdot
 	)
 
