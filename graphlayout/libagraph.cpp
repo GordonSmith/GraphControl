@@ -154,6 +154,7 @@ bool DoLayout(const char * layout, const char* mem, const char* format, const ch
 }
 
 #ifdef DOT_PARSER
+static int internalID = 0;
 void gatherAttrs(Agraph_t * graph, void * item, int type, AttrMap & attrs)
 {
 	attrs.clear();
@@ -164,10 +165,7 @@ void gatherAttrs(Agraph_t * graph, void * item, int type, AttrMap & attrs)
 		if (agget(item, attr->name) != NULL)
 		{
 			std::string val = agget(item, attr->name);
-			if (val.length() && val.compare("\\N") != 0)
-			{
-				attrs[attr->name] = val;
-			}
+			attrs[attr->name] = val;
 		}
 	}
 
@@ -182,11 +180,11 @@ void gatherAttrs(Agraph_t * graph, void * item, int type, AttrMap & attrs)
 	if (attrs.find("id") == attrs.end())
 	{
 		char * name = agnameof(item);
-		if (name)
+		if (name && name[0] != '\0')
 		{
-			if (type == AGRAPH && boost::algorithm::istarts_with(name, "cluster_"))
+			if (type == AGRAPH && boost::algorithm::istarts_with(name, "cluster"))
 			{
-				attrs["id"] = (name + sizeof("cluster_") - 1);
+				attrs["id"] = (name + sizeof("cluster") - 1);
 			}
 			else
 			{
@@ -196,6 +194,10 @@ void gatherAttrs(Agraph_t * graph, void * item, int type, AttrMap & attrs)
 		else if (type == AGEDGE)  //  Anonymous edge
 		{
 			attrs["id"] = attrs["source"] + "_" + attrs["target"];
+		}
+		else
+		{
+			attrs["id"] = std::string("internal_") + boost::lexical_cast<std::string>(internalID++);
 		}
 	}
 #else
@@ -228,8 +230,6 @@ void walkGraph(graph_t * root_g, graph_t * g, IGraphvizVisitor * visitor, int de
 	{
 		AttrMap v_attrs;
 		gatherAttrs(root_g, v, AGNODE, v_attrs);
-		if (v_attrs.find("label") == v_attrs.end())
-			v_attrs["label"] = agnameof(v);
 
 		visitor->OnStartVertex(v_attrs["id"], v_attrs);
 		for (Agedge_t *e = agfstout(g, v); e; e = agnxtout(g, e)) 

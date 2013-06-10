@@ -275,6 +275,8 @@ const char * BuildVertexString(const IVertex * vertex, std::string &vertexStr, b
 	std::string attrStr, propsStr;
 	if (vertex->GetPropertyCUnknown(DOT_PROP_CDOTITEM))
 	{
+		if (isPoint)
+			propsStr += "<att name=\"_kind\" value=\"point\"/>";
 		CDotItem * dotItem = (CDotItem *)vertex->GetPropertyCUnknown(DOT_PROP_CDOTITEM);
 		for (CDotItem::AttrMap::const_iterator itr = dotItem->m_attrs.begin(); itr != dotItem->m_attrs.end(); ++itr)
 		{
