@@ -143,6 +143,7 @@ protected:
 public:
 	CXgmmlParser(IGraph * graph, bool merge) : m_graph(graph), m_merge(merge)
 	{
+		m_graph->SetExternalID(GRAPH_TYPE_GRAPH, "0", m_graph);
 	}
 
 	const std::string & constGet(const ciStringStringMap & map, const std::string & key, const std::string & defVal  = "")
@@ -209,13 +210,12 @@ public:
 
 		if (e->m_tag.compare("node") == 0)
 		{
-            if (m_giStack.empty())
-            {
-		        m_graph->SetExternalID(GRAPH_TYPE_GRAPH, constGet(e->m_attr, "id"), m_graph);
-		        m_graph->SetProperty(DOT_ID, constGet(e->m_attr, "id").c_str());
-            }
+			if (m_giStack.empty())
+			{
+				m_graph->SetProperty(DOT_ID, constGet(e->m_attr, "id").c_str());
+			}
 
-            //  If top is NULL at this point it must be a subgraph.
+			//  If top is NULL at this point it must be a subgraph.
 			EnsureTopIsACluster();
 			m_giStack.push_front(constGet(e->m_attr, "id"));
 		}
