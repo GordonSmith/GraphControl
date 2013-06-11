@@ -43,7 +43,7 @@ public:
 class CDotGraph : public CDotItem
 {
 public:
-    bool m_directed;
+	bool m_directed;
 
 	CDotGraph(bool directed, const std::string & name, const AttrMap & attrs);
 
@@ -70,7 +70,7 @@ typedef CUnknownPtr<CDotVertex> CDotVertexPtr;
 class CDotEdge : public CDotItem
 {
 public:
-    bool m_directed;
+	bool m_directed;
 	std::string m_source;
 	std::string m_target;
 

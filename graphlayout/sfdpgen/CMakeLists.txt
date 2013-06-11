@@ -26,41 +26,33 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/sparse_solve.h
 	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/spring_electrical.c
 	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/spring_electrical.h
-	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/stress_model.c
-	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/stress_model.h
-	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/uniform_stress.c
-	${GRAPHVIZSRC_DIRS}/lib/sfdpgen/uniform_stress.h
 	)
 
-include_directories (
-	${GRAPHVIZSRC_DIRS}/lib/sfdpgen
-	${GRAPHVIZSRC_DIRS}/lib/common
-	${GRAPHVIZSRC_DIRS}/lib/cgraph
-	${GRAPHVIZSRC_DIRS}/lib/neatogen
-	${GRAPHVIZSRC_DIRS}/lib/gd
-	${GRAPHVIZSRC_DIRS}/lib/cdt
-	${GRAPHVIZSRC_DIRS}/lib/cgraph
-	${GRAPHVIZSRC_DIRS}/lib/pathplan
-	${GRAPHVIZSRC_DIRS}/lib/pack
-	${GRAPHVIZSRC_DIRS}/lib/gvc
-	${GRAPHVIZSRC_DIRS}/lib/sparse
-	${GRAPHVIZSRC_DIRS}/lib/ingraphs
+if ( GRAPHVIZ_VER_2_30_1 )
+	list ( APPEND SRCS
+		${GRAPHVIZSRC_DIRS}/lib/sfdpgen/stress_model.c
+		${GRAPHVIZSRC_DIRS}/lib/sfdpgen/stress_model.h
+		${GRAPHVIZSRC_DIRS}/lib/sfdpgen/uniform_stress.c
+		${GRAPHVIZSRC_DIRS}/lib/sfdpgen/uniform_stress.h
 	)
-
-if (WIN32)
-	ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE -DMSWIN32)
-else ()
-	ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE )
-endif ()
+endif ( GRAPHVIZ_VER_2_30_1 )
 
 add_library ( sfdpgen STATIC
 			${SRCS}
 			)
 target_link_libraries ( sfdpgen
 						common
-						cgraph
 						neatogen
 						pack
 	)
+if ( GRAPHVIZ_VER_2_30_1 )
+	target_link_libraries ( sfdpgen
+		cgraph
+		)
+else ( GRAPHVIZ_VER_2_30_1 )
+	target_link_libraries ( sfdpgen
+		graph
+		)
+endif ( GRAPHVIZ_VER_2_30_1 )
 
 

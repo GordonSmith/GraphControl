@@ -32,18 +32,6 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/cgraph/write.c
 	)
 
-include_directories ( 
-	${GRAPHVIZSRC_DIRS}/lib/cgraph
-	${GRAPHVIZSRC_DIRS}/lib/cdt
-	${GRAPHVIZSRC_DIRS}/lib/common
-	)
-
-if (WIN32)
-	ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE -DMSWIN32)
-else ()
-	ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE )
-endif ()
-
 add_library ( cgraph STATIC
 			${SRCS} 
 			)

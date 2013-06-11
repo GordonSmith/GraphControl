@@ -22,22 +22,17 @@ set (	SRCS
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtsize.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtstat.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtstrhash.c
-	${GRAPHVIZSRC_DIRS}/lib/cdt/dttreeset.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtview.c
 	${GRAPHVIZSRC_DIRS}/lib/cdt/dtwalk.c
 
 	${GRAPHVIZSRC_DIRS}/lib/cdt/cdt.def
 	)
 
-include_directories (
-	${GRAPHVIZSRC_DIRS}/lib/cdt
+if ( GRAPHVIZ_VER_2_30_1 )
+	list ( APPEND SRCS
+		${GRAPHVIZSRC_DIRS}/lib/cdt/dttreeset.c
 	)
-
-if (WIN32)
-	ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE -DMSWIN32)
-else ()
-	ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE )
-endif ()
+endif ( GRAPHVIZ_VER_2_30_1 )
 
 add_library ( cdt STATIC
 			${SRCS}

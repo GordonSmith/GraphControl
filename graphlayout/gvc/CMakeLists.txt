@@ -29,24 +29,6 @@ set (	WIN32_SRCS
 	)
 endif ( WIN32 )
 
-include_directories (
-	${GRAPHVIZSRC_DIRS}/lib/gvc
-	${GRAPHVIZSRC_DIRS}/lib/cdt
-	${GRAPHVIZSRC_DIRS}/lib/cgraph
-	${GRAPHVIZSRC_DIRS}/lib/pathplan
-	${GRAPHVIZSRC_DIRS}/lib/common
-	${GRAPHVIZSRC_DIRS}/lib/cgraph
-	#${GRAPHVIZSRC_DIRS}/third-party/include
-	)
-
-#ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE -DMSWIN32 -DNONDLL)
-
-if (WIN32)
-	ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE -DMSWIN32 -DHAVE_LIBZ=0)
-else ()
-	ADD_DEFINITIONS( -DHAVE_CONFIG_H -DHAVE_SETMODE )
-endif ()
-
 add_library ( gvc STATIC
 			${SRCS}
 			${WIN32_SRCS}
@@ -54,7 +36,15 @@ add_library ( gvc STATIC
 target_link_libraries ( gvc
 						common
 						cdt
-						cgraph
 	)
+if ( GRAPHVIZ_VER_2_30_1 )
+	target_link_libraries ( gvc
+		cgraph
+		)
+else ( GRAPHVIZ_VER_2_30_1 )
+	target_link_libraries ( gvc
+		graph
+		)
+endif ( GRAPHVIZ_VER_2_30_1 )
 
 

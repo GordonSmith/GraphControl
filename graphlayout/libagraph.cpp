@@ -218,11 +218,23 @@ void walkGraph(graph_t * root_g, graph_t * g, IGraphvizVisitor * visitor, int de
 	AttrMap g_attrs;
 	gatherAttrs(root_g, g, AGRAPH, g_attrs);
 
+#if WITH_CGRAPH
 	depth == 0 ? visitor->OnStartGraph(root_g->desc.directed, g_attrs["id"], g_attrs) : visitor->OnStartCluster(g_attrs["id"], g_attrs);
 
 	graph_t *subg;
-
 	for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
+#else
+	depth == 0 ? visitor->OnStartGraph(agisdirected(root_g), g_attrs["id"], g_attrs) : visitor->OnStartCluster(g_attrs["id"], g_attrs);
+	graph_t *mg, *subg;
+	node_t *mm, *mn;
+	edge_t *me;
+
+	mm = g->meta_node;
+	mg = mm->graph;
+	for (me = agfstout(mg, mm); me; me = agnxtout(mg, me)) {
+		mn = me->head;
+		subg = agusergraph(mn);
+#endif
 		walkGraph(root_g, subg, visitor, depth + 1);
 	}
 
@@ -236,7 +248,11 @@ void walkGraph(graph_t * root_g, graph_t * g, IGraphvizVisitor * visitor, int de
 		{
 			AttrMap e_attrs;
 			gatherAttrs(root_g, e, AGEDGE, e_attrs);
+#if WITH_CGRAPH
 			visitor->OnStartEdge(root_g->desc.directed, e_attrs["id"], e_attrs["source"], e_attrs["target"], e_attrs);
+#else
+			visitor->OnStartEdge(agisdirected(root_g), e_attrs["id"], e_attrs["source"], e_attrs["target"], e_attrs);
+#endif
 			visitor->OnEndEdge(e_attrs["id"]);
 		}
 		visitor->OnEndVertex(v_attrs["id"]);
