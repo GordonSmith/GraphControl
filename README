@@ -6,6 +6,11 @@ sudo apt-get install cmake git git-svn
 cmake:  http://cmake.org/cmake/resources/software.html
 git: http://git-scm.com/download
 
+# Windows
+cmake:  https://cmake.org/
+git:  https://git-for-windows.github.io/
+tortoiseGit:  https://tortoisegit.org/
+
 #### Get required libraries #### 
 # On Linux (Ubuntu 13.04)
 sudo apt-get install libboost-dev libboost-system-dev libboost-thread-dev libboost-filesystem-dev libboost-chrono-dev libfreetype6-dev libexpat1-dev libgtk2.0-dev
@@ -14,7 +19,11 @@ sudo apt-get install libboost-dev libboost-system-dev libboost-thread-dev libboo
 sudo port install boost freetype expat
 
 # On Windows
-TODO:  How to get "externals folder" + how to install WIX
+boost v1.5.8:  http://www.boost.org/
+expat v2.0.1:  http://sourceforge.net/projects/expat/
+FreeType v2.4.8:  http://www.freetype.org/
+Note I:  The above libraries will need to be built with VS2015
+Note II:  Create an "externals" folder next to you git folder and place the third party libraries there, for boost you will place the built libraries, for the others you will unzip to there and build in place.
 
 #### Create development folder #### 
 mkdir ~/git
@@ -23,19 +32,19 @@ cd ~/git
 #### Get GraphControl Sources #### 
 git clone https://github.com/hpcc-systems/GraphControl.git
 cd GraphControl
-git checkout candidate-3.10.x
+git checkout candidate-6.0.0
 cd ..
 
 #### Get Firebreath library #### 
 git clone https://github.com/GordonSmith/FireBreath.git
 cd FireBreath
-git checkout closedown-5.0.x
+git checkout candidate-6.0.0
 cd ..
 
 #### Get unrestricted (2.4) agg libraries #### 
 git clone https://github.com/GordonSmith/agg.git
 cd agg
-git checkout graphcontrol-3.10.x
+git checkout candidate-6.0.0
 cd ..
 
 #### Get AT&T Graphviz libraries #### 
